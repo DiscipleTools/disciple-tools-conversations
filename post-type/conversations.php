@@ -145,7 +145,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                     ],
                 ],
                 'tile'     => 'status',
-                'icon' => get_template_directory_uri() . '/dt-assets/images/type.svg',
+                'font-icon' => 'mdi mdi-arrow-decision',
                 'show_in_table' => 5,
                 'select_cannot_be_empty' => true,
             ];
@@ -174,7 +174,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                     ],
                 ],
                 'tile'     => 'status',
-                'icon' => get_template_directory_uri() . '/dt-assets/images/status.svg',
+                'font-icon' => 'mdi mdi-list-status',
                 'default_color' => '#FFFFFF',
                 'show_in_table' => 10,
             ];
@@ -232,9 +232,6 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
     }
 
     public function dt_details_additional_tiles( $tiles, $post_type = '' ){
-        if ( $post_type === $this->post_type ){
-//            $tiles['details']['hidden'] = true;
-        }
         return $tiles;
     }
     public function add_comment_section( $sections, $post_type ){
@@ -378,7 +375,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
     //action when a post has been created
     public function dt_post_created( $post_type, $post_id, $initial_fields ){
         if ( $post_type === $this->post_type ){
-
+            $test  = '';
         }
     }
 
