@@ -14,25 +14,26 @@ if ( ! class_exists( 'DT_Module_Base' ) ) {
  */
 add_filter( 'dt_post_type_modules', function( $modules ){
 
-    /**
-     * @todo Update the starter in the array below 'starter_base'. Follow the pattern.
-     * @todo Add more modules by adding a new array element. i.e. 'starter_base_two'.
-     */
+
     $modules['conversations_base'] = [
-        'name' => __( 'Starter', 'disciple-tools-conversations' ),
+        'name' => __( 'Conversations', 'disciple-tools-conversations' ),
         'enabled' => true,
-        'locked' => true,
+        'locked' => false,
         'prerequisites' => [ 'contacts_base' ],
         'post_type' => 'conversations',
-        'description' => __( 'Default starter functionality', 'disciple-tools-conversations' )
+        'description' => __( 'Upgrade Contact Info to track conversations', 'disciple-tools-conversations' )
     ];
 
     return $modules;
 }, 20, 1 );
 
-require_once 'module-base.php';
+require_once 'conversations.php';
 Disciple_Tools_Conversations_Base::instance();
 
-/**
- * @todo require_once and load additional modules
- */
+require_once 'conversations-list-filters.php';
+Disciple_Tools_Conversations_List::instance();
+
+require_once 'handles.php';
+
+require_once 'contacts-conversations.php';
+Disciple_Tools_Contacts_Conversations::instance();

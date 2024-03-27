@@ -45,17 +45,17 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         // hooks
         add_action( 'post_connection_removed', [ $this, 'post_connection_removed' ], 10, 4 );
         add_action( 'post_connection_added', [ $this, 'post_connection_added' ], 10, 4 );
+        add_filter( 'dt_create_post_args', [ $this, 'dt_create_post_args' ], 10, 3 );
+        add_filter( 'dt_create_post_check_proceed', [ $this, 'dt_create_post_check_proceed' ], 10, 3 );
+        add_filter( 'dt_update_post_check_proceed', [ $this, 'dt_update_post_check_proceed' ], 10, 3 );
         add_filter( 'dt_post_update_fields', [ $this, 'dt_post_update_fields' ], 10, 3 );
         add_filter( 'dt_post_create_fields', [ $this, 'dt_post_create_fields' ], 10, 2 );
         add_action( 'dt_post_created', [ $this, 'dt_post_created' ], 10, 3 );
+//        add_action( 'dt_post_updated', [ $this, 'dt_post_updated' ], 10, 5 );
+
         add_action( 'dt_comment_created', [ $this, 'dt_comment_created' ], 10, 4 );
 
-        //list
-        add_filter( 'dt_user_list_filters', [ $this, 'dt_user_list_filters' ], 10, 2 );
-        add_filter( 'dt_filter_access_permissions', [ $this, 'dt_filter_access_permissions' ], 20, 2 );
-
 //        add_action( 'dt_record_after_details_section', [ $this, 'dt_record_after_details_section' ], 10, 2 );
-
 
         //comments
         add_filter( 'dt_filter_post_comments', [ $this, 'dt_filter_post_comments' ], 10, 3 );
@@ -84,6 +84,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         return $settings;
     }
 
+    // @todo
     public function dt_set_roles_and_permissions( $expected_roles ){
 
         if ( !isset( $expected_roles['my_starter_role'] ) ){
@@ -93,7 +94,6 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 'description' => 'Does something Cool',
                 'permissions' => [
                     'access_contacts' => true,
-                    // @todo more capabilities
                 ]
             ];
         }
@@ -152,35 +152,42 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 
 
             $fields['status'] = [
-                'name'        => __( 'Status', 'disciple-tools-conversations' ),
-                'description' => __( 'Set the current status.', 'disciple-tools-conversations' ),
+                'name'        => __( 'Status', 'crm-emails' ),
+                'description' => __( 'Set the current status.', 'crm-emails' ),
                 'type'        => 'key_select',
                 'default'     => [
-                    'inactive' => [
-                        'label' => __( 'Inactive', 'disciple-tools-conversations' ),
-                        'description' => __( 'No longer active.', 'disciple-tools-conversations' ),
+                    'unverified' => [
+                        'label' => __( 'Not Verified', 'crm-emails' ),
+                        'color' => '#FF9800'
+                    ],
+                    'verified' => [
+                        'label' => __( 'Verified', 'crm-emails' ),
+                        'color' => '#4CAF50'
+                    ],
+                    'unsubscribed'   => [
+                        'label' => __( 'Unsubscribed', 'crm-emails' ),
                         'color' => '#F43636'
                     ],
-                    'active'   => [
-                        'label' => __( 'Active', 'disciple-tools-conversations' ),
-                        'description' => __( 'Is active.', 'disciple-tools-conversations' ),
-                        'color' => '#4CAF50'
+                    'blocked'   => [
+                        'label' => __( 'Do not Email', 'crm-emails' ),
+                        'color' => '#F43636'
                     ],
                 ],
                 'tile'     => 'status',
                 'icon' => get_template_directory_uri() . '/dt-assets/images/status.svg',
-                'default_color' => '#366184',
+                'default_color' => '#FFFFFF',
                 'show_in_table' => 10,
             ];
-            $fields['assigned_to'] = [
-                'name'        => __( 'Assigned To', 'disciple-tools-conversations' ),
-                'description' => __( 'Select the main person who is responsible for reporting on this record.', 'disciple-tools-conversations' ),
-                'type'        => 'user_select',
-                'default'     => '',
-                'tile' => 'status',
-                'icon' => get_template_directory_uri() . '/dt-assets/images/assigned-to.svg',
-                'show_in_table' => 16,
-            ];
+
+//            $fields['assigned_to'] = [
+//                'name'        => __( 'Assigned To', 'disciple-tools-conversations' ),
+//                'description' => __( 'Select the main person who is responsible for reporting on this record.', 'disciple-tools-conversations' ),
+//                'type'        => 'user_select',
+//                'default'     => '',
+//                'tile' => 'status',
+//                'icon' => get_template_directory_uri() . '/dt-assets/images/assigned-to.svg',
+//                'show_in_table' => 16,
+//            ];
 
             $fields['contacts'] = [
                 'name' => __( 'Contacts', 'disciple-tools-conversations' ),
@@ -194,20 +201,30 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 'create-icon' => get_template_directory_uri() . '/dt-assets/images/add-contact.svg',
                 'show_in_table' => 35
             ];
-        }
 
-        if ( $post_type === 'contacts' ){
-            $fields[$this->post_type] = [
-                'name' => $this->plural_name,
-                'description' => '',
-                'type' => 'connection',
-                'post_type' => $this->post_type,
-                'p2p_direction' => 'from',
-                'p2p_key' => $this->post_type.'_to_contacts',
-                'tile' => 'other',
-                'icon' => get_template_directory_uri() . '/dt-assets/images/group-type.svg',
-                'create-icon' => get_template_directory_uri() . '/dt-assets/images/add-group.svg',
-                'show_in_table' => 35
+            //first name
+            $fields['first_name'] = [
+                'name'        => __( 'First Name', 'disciple-tools-conversations' ),
+                'description' => __( 'First Name', 'disciple-tools-conversations' ),
+                'type'        => 'text',
+                'tile'        => 'details',
+                'show_in_table' => 20,
+            ];
+            //last name
+            $fields['last_name'] = [
+                'name'        => __( 'Last Name', 'disciple-tools-conversations' ),
+                'description' => __( 'Last Name', 'disciple-tools-conversations' ),
+                'type'        => 'text',
+                'tile'        => 'details',
+                'show_in_table' => 25,
+            ];
+            //sources
+            $fields['sources'] = [
+                'name'        => __( 'Source', 'disciple-tools-conversations' ),
+                'description' => __( 'Source of the conversation', 'disciple-tools-conversations' ),
+                'type'        => 'tags',
+                'tile'        => 'details',
+                'show_in_table' => 30,
             ];
         }
 
@@ -216,9 +233,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 
     public function dt_details_additional_tiles( $tiles, $post_type = '' ){
         if ( $post_type === $this->post_type ){
-//            $tiles['connections'] = [ 'label' => __( 'Connections', 'disciple-tools-conversations' ) ];
-//            $tiles['other'] = [ 'label' => __( 'Other', 'disciple-tools-conversations' ) ];
-            $tiles['details']['hidden'] = true;
+//            $tiles['details']['hidden'] = true;
         }
         return $tiles;
     }
@@ -260,20 +275,57 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         <?php }
     }
 
+
+    /**
+     * HOOKS
+     */
+
+    /**
+     * Make sure only one post can be created with the same phone, email, tec
+     * @param array $args
+     * @param string $post_type
+     * @return array
+     */
+    public function dt_create_post_args( array $args, string $post_type ){
+        if ( $post_type === $this->post_type ){
+            $args['check_for_duplicates'] = [ 'name', 'title' ];
+        }
+        return $args;
+    }
+
+    /**
+     * Make sure conversation post has a type
+     * @param boolean $proceed
+     * @param array $fields
+     * @param string $post_type
+     * @return bool|WP_Error
+     */
+    public function dt_create_post_check_proceed( bool $proceed, array $fields, string $post_type ){
+        if ( !isset( $fields['type'] ) ){
+            return new WP_Error( 400, 'Handle Type is required', [ 'function' => __METHOD__ ] );
+        }
+        return $proceed;
+    }
+
+    /**
+     * Make sure communication handles can not be changed.
+     * Instead a new conversation should be created.
+     * @param boolean $proceed
+     * @param array $fields
+     * @param string $post_type
+     * @return bool|WP_Error
+     */
+    public function dt_update_post_check_proceed( bool $proceed, array $fields, string $post_type ){
+        if ( $post_type === $this->post_type ){
+            $name = $fields['title'] ?? $fields['name'] ?? '';
+            if ( !empty( $name ) ){
+                return new WP_Error( 400, 'Cannot update communication handles', [ 'function' => __METHOD__ ] );
+            }
+        }
+        return $proceed;
+    }
+
     public function post_connection_added( $post_type, $post_id, $field_key, $value ){
-//        if ( $post_type === $this->post_type ){
-//            if ( $field_key === "members" ){
-//                // @todo change 'members'
-//                // execute your code here, if field key match
-//            }
-//            if ( $field_key === "coaches" ){
-//                // @todo change 'coaches'
-//                // execute your code here, if field key match
-//            }
-//        }
-//        if ( $post_type === "contacts" && $field_key === $this->post_type ){
-//            // execute your code here, if a change is made in contacts and a field key is matched
-//        }
     }
 
     //action when a post connection is removed during create or update
@@ -311,160 +363,23 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
     // filter at the start of post creation
     public function dt_post_create_fields( $fields, $post_type ){
         if ( $post_type === $this->post_type ){
-            $post_fields = DT_Posts::get_post_field_settings( $post_type );
-            if ( isset( $post_fields['status'] ) && !isset( $fields['status'] ) ){
-                $fields['status'] = 'active';
+            $handle_types = Communication_Handles::get_handles();
+            $handle_type = $handle_types[$fields['type']] ?? null;
+            $name = $fields['title'] ?? $fields['name'] ?? '';
+            if ( $handle_type && isset( $handle_type['convert_to_lowercase'] ) && $handle_type['convert_to_lowercase'] ){
+                $fields['name'] = strtolower( $name );
             }
+            //remove name whitespace
+            $fields['name'] = preg_replace( '/\s+/', '', $fields['name'] );
         }
         return $fields;
     }
 
     //action when a post has been created
     public function dt_post_created( $post_type, $post_id, $initial_fields ){
-    }
+        if ( $post_type === $this->post_type ){
 
-    //list page filters function
-
-    private static function count_records_assigned_to_me_by_status(){
-        global $wpdb;
-        $post_type = self::post_type();
-        $current_user = get_current_user_id();
-
-        $results = $wpdb->get_results( $wpdb->prepare( "
-            SELECT status.meta_value as status, count(pm.post_id) as count
-            FROM $wpdb->postmeta pm
-            INNER JOIN $wpdb->posts a ON( a.ID = pm.post_id AND a.post_type = %s and a.post_status = 'publish' )
-            INNER JOIN $wpdb->postmeta status ON ( status.post_id = pm.post_id AND status.meta_key = 'status' )
-            WHERE pm.meta_key = 'assigned_to'
-            AND pm.meta_value = CONCAT( 'user-', %s )
-            GROUP BY status.meta_value
-        ", $post_type, $current_user ), ARRAY_A);
-
-        return $results;
-    }
-
-    //list page filters function
-    private static function count_records_by_status(){
-        global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare( "
-            SELECT status.meta_value as status, count(status.post_id) as count
-            FROM $wpdb->postmeta status
-            INNER JOIN $wpdb->posts a ON( a.ID = status.post_id AND a.post_type = %s and a.post_status = 'publish' )
-            WHERE status.meta_key = 'status'
-            GROUP BY status.meta_value
-        ", self::post_type() ), ARRAY_A );
-
-        return $results;
-    }
-
-    //build list page filters
-    public static function dt_user_list_filters( $filters, $post_type ){
-        /**
-         * @todo process and build filter lists
-         */
-        if ( $post_type === self::post_type() ){
-            $records_assigned_to_me_by_status_counts = self::count_records_assigned_to_me_by_status();
-            $fields = DT_Posts::get_post_field_settings( $post_type );
-            /**
-             * Setup my filters
-             */
-            $active_counts = [];
-            $status_counts = [];
-            $total_my = 0;
-            foreach ( $records_assigned_to_me_by_status_counts as $count ){
-                $total_my += $count['count'];
-                dt_increment( $status_counts[$count['status']], $count['count'] );
-            }
-
-            // add assigned to me tab
-            $filters['tabs'][] = [
-                'key' => 'assigned_to_me',
-                'label' => __( 'Assigned to me', 'disciple-tools-conversations' ),
-                'count' => $total_my,
-                'order' => 20
-            ];
-            // add assigned to me filters
-            $filters['filters'][] = [
-                'ID' => 'my_all',
-                'tab' => 'assigned_to_me',
-                'name' => __( 'All', 'disciple-tools-conversations' ),
-                'query' => [
-                    'assigned_to' => [ 'me' ],
-                    'sort' => 'status'
-                ],
-                'count' => $total_my,
-            ];
-            //add a filter for each status
-            foreach ( $fields['status']['default'] as $status_key => $status_value ) {
-                if ( isset( $status_counts[$status_key] ) ){
-                    $filters['filters'][] = [
-                        'ID' => 'my_' . $status_key,
-                        'tab' => 'assigned_to_me',
-                        'name' => $status_value['label'],
-                        'query' => [
-                            'assigned_to' => [ 'me' ],
-                            'status' => [ $status_key ],
-                            'sort' => '-post_date'
-                        ],
-                        'count' => $status_counts[$status_key]
-                    ];
-                }
-            }
-
-            if ( DT_Posts::can_view_all( self::post_type() ) ){
-                $records_by_status_counts = self::count_records_by_status();
-                $status_counts = [];
-                $total_all = 0;
-                foreach ( $records_by_status_counts as $count ){
-                    $total_all += $count['count'];
-                    dt_increment( $status_counts[$count['status']], $count['count'] );
-                }
-
-                // add by Status Tab
-                $filters['tabs'][] = [
-                    'key' => 'by_status',
-                    'label' => __( 'All By Status', 'disciple-tools-conversations' ),
-                    'count' => $total_all,
-                    'order' => 30
-                ];
-                // add assigned to me filters
-                $filters['filters'][] = [
-                    'ID' => 'all_status',
-                    'tab' => 'by_status',
-                    'name' => __( 'All', 'disciple-tools-conversations' ),
-                    'query' => [
-                        'sort' => '-post_date'
-                    ],
-                    'count' => $total_all
-                ];
-
-                foreach ( $fields['status']['default'] as $status_key => $status_value ) {
-                    if ( isset( $status_counts[$status_key] ) ){
-                        $filters['filters'][] = [
-                            'ID' => 'all_' . $status_key,
-                            'tab' => 'by_status',
-                            'name' => $status_value['label'],
-                            'query' => [
-                                'status' => [ $status_key ],
-                                'sort' => '-post_date'
-                            ],
-                            'count' => $status_counts[$status_key]
-                        ];
-                    }
-                }
-            }
         }
-        return $filters;
-    }
-
-    // access permission
-    public static function dt_filter_access_permissions( $permissions, $post_type ){
-        if ( $post_type === self::post_type() ){
-            if ( DT_Posts::can_view_all( $post_type ) ){
-                $permissions = [];
-            }
-        }
-        return $permissions;
     }
 
     // scripts
@@ -473,6 +388,26 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             $test = '';
             // @todo add enqueue scripts
         }
+    }
+
+    public function dt_add_section( $post_type, $post ) {
+        if ( $post_type === 'conversations' ){
+            ?>
+            <div class="cell small-12">
+                <div class="bordered-box" id="conversations-tile">
+                    <h3 class="section-header">
+                        Conversations
+                    </h3>
+                    <div class="section-body">
+                        <button class="button">Send Email</button>
+                        <button class="button">Send SMS</button>
+                        <button class="button">Send WhatsApp</button>
+                    </div>
+
+                </div>
+            </div>
+
+        <?php }
     }
 }
 
