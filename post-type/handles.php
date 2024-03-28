@@ -75,14 +75,18 @@ class Communication_Handles {
             if ( isset( $fields['last_name'] ) ){
                 unset( $fields['last_name'] );
             }
-            $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
+            if ( $contact_id ){
+                $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
+            }
             $conversation_record = DT_Posts::update_post( 'conversations', $conversation_record['ID'], $fields, true, false );
         } else {
             if ( !isset( $fields['type'] ) ){
                 return new WP_Error( 'missing_type', 'Missing type field' );
             }
             $fields['name'] = $handle;
-            $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
+            if ( $contact_id ){
+                $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
+            }
             $conversation_record = DT_Posts::create_post( 'conversations', $fields, true, false );
         }
         if ( is_wp_error( $conversation_record ) ){
