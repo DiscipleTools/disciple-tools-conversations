@@ -37,3 +37,5 @@ require_once 'handles.php';
 
 require_once 'contacts-conversations.php';
 Disciple_Tools_Contacts_Conversations::instance();
+
+require_once 'update-hook.php';
