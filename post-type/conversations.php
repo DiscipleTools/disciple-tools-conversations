@@ -298,8 +298,10 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
      * @return bool|WP_Error
      */
     public function dt_create_post_check_proceed( bool $proceed, array $fields, string $post_type ){
-        if ( !isset( $fields['type'] ) ){
-            return new WP_Error( 400, 'Handle Type is required', [ 'function' => __METHOD__ ] );
+        if ( $post_type === $this->post_type ){
+            if ( !isset( $fields['type'] ) ){
+                return new WP_Error( 400, 'Handle Type is required', [ 'function' => __METHOD__ ] );
+            }
         }
         return $proceed;
     }
