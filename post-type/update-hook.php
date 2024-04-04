@@ -8,7 +8,7 @@ add_action( 'dt_comment_created', function ( $post_type, $post_id, $comment_id, 
     $message = $comment->comment_content;
 
     $pieces = explode( ',', $message );
-    $group_id = $pieces[0];
+    $group_id = (int) $pieces[0];
     $member_count = $pieces[1];
     $comment = $pieces[2];
 
