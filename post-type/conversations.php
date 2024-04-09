@@ -135,9 +135,17 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                         'label' => __( 'Email', 'disciple-tools-conversations' ),
                         'description' => __( 'Email conversation', 'disciple-tools-conversations' ),
                     ],
+                    'sms'   => [
+                        'label' => __( 'SMS', 'disciple-tools-conversations' ),
+                        'description' => __( 'SMS', 'disciple-tools-conversations' ),
+                    ],
                     'phone'   => [
                         'label' => __( 'Phone', 'disciple-tools-conversations' ),
                         'description' => __( 'SMS, Whatsapp, etc', 'disciple-tools-conversations' ),
+                    ],
+                    'whatsapp' => [
+                        'label' => __( 'WhatsApp', 'disciple-tools-conversations' ),
+                        'description' => __( 'WhatsApp conversation', 'disciple-tools-conversations' ),
                     ],
                     'facebook' => [
                         'label' => __( 'Facebook', 'disciple-tools-conversations' ),
