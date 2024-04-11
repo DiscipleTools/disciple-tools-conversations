@@ -362,7 +362,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
     // filter at the start of post creation
     public function dt_post_create_fields( $fields, $post_type ){
         if ( $post_type === $this->post_type ){
-            $handle_types = Communication_Handles::get_handles();
+            $handle_types = DT_Conversations_API::get_handles();
             $handle_type = $handle_types[$fields['type']] ?? null;
             $name = $fields['title'] ?? $fields['name'] ?? '';
             if ( $handle_type && isset( $handle_type['convert_to_lowercase'] ) && $handle_type['convert_to_lowercase'] ){

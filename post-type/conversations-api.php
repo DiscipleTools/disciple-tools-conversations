@@ -2,7 +2,7 @@
 if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 
-class Communication_Handles {
+class DT_Conversations_API {
     public static function get_handles(){
         $handles = [
             'email' => [

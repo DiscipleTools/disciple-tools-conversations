@@ -33,7 +33,7 @@ Disciple_Tools_Conversations_Base::instance();
 require_once 'conversations-list-filters.php';
 Disciple_Tools_Conversations_List::instance();
 
-require_once 'handles.php';
+require_once 'conversations-api.php';
 
 require_once 'contacts-conversations.php';
 Disciple_Tools_Contacts_Conversations::instance();
