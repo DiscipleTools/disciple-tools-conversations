@@ -58,7 +58,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 //        add_action( 'dt_record_after_details_section', [ $this, 'dt_record_after_details_section' ], 10, 2 );
 
         //comments
-        add_filter( 'dt_filter_post_comments', [ $this, 'dt_filter_post_comments' ], 10, 3 );
+//        add_filter( 'dt_filter_post_comments', [ $this, 'dt_filter_post_comments' ], 10, 3 );
     }
 
     public function after_setup_theme(){
@@ -87,23 +87,19 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
     // @todo
     public function dt_set_roles_and_permissions( $expected_roles ){
 
-        if ( !isset( $expected_roles['my_starter_role'] ) ){
-            $expected_roles['my_starter_role'] = [
-
-                'label' => __( 'My Conversation Role', 'disciple-tools-conversations' ),
-                'description' => 'Does something Cool',
-                'permissions' => [
-                    'access_contacts' => true,
-                ]
-            ];
-        }
-
-        // if the user can access contact they also can access this post type
+        // if the user can access contacts they also can access conversations
         foreach ( $expected_roles as $role => $role_value ){
             if ( isset( $expected_roles[$role]['permissions']['access_contacts'] ) && $expected_roles[$role]['permissions']['access_contacts'] ){
                 $expected_roles[$role]['permissions']['access_' . $this->post_type ] = true;
                 $expected_roles[$role]['permissions']['create_' . $this->post_type] = true;
                 $expected_roles[$role]['permissions']['update_' . $this->post_type] = true;
+            }
+        }
+        // if the user can access all contacts they also can access all conversations
+        foreach ( $expected_roles as $role => $role_value ){
+            if ( isset( $expected_roles[$role]['permissions']['view_any_contacts'] ) && $expected_roles[$role]['permissions']['view_any_contacts'] ){
+                $expected_roles[$role]['permissions']['view_any_' . $this->post_type ] = true;
+                $expected_roles[$role]['permissions']['update_any_' . $this->post_type] = true;
             }
         }
 
@@ -345,18 +341,6 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 
     //filter when a comment is created
     public function dt_comment_created( $post_type, $post_id, $comment_id, $type ){
-    }
-
-    public function dt_filter_post_comments( $response_body, $post_type, $post_id ){
-        if ( $post_type === 'contacts' ){
-            $contact_conversations = DT_Posts::list_posts( 'conversations', [ 'contacts' => [ $post_id ] ] );
-            foreach ( $contact_conversations['posts'] as $conv ){
-                $conv_comments = DT_Posts::get_post_comments( 'conversations', $conv['ID'] );
-                $response_body = array_merge( $response_body, $conv_comments['comments'] );
-            }
-        }
-        return $response_body;
-
     }
 
     // filter at the start of post creation
