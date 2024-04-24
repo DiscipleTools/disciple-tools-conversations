@@ -66,6 +66,9 @@ class DT_Conversations_API {
     public static function create_or_update_conversation_record( string $handle, array $fields, int $contact_id = null ){
         $conversation_record = self::find_record_by_handle( $handle, true );
         if ( !empty( $conversation_record ) ){
+            //if ( is_user_logged_in() && !DT_Posts::can_view( 'conversation', $conversation_record['ID'] ) ){
+            //    return new WP_Error( 'no_access', 'No access to conversation' );
+            //}
             if ( isset( $fields['name'] ) ){
                 unset( $fields['name'] );
             }
@@ -93,6 +96,33 @@ class DT_Conversations_API {
             return $conversation_record;
         }
         return $conversation_record;
+    }
+
+    public static function validate_and_format_email( $email ){
+        $email = trim( $email );
+        $email = str_replace( ' ', '', $email ); //remove spaces
+        $email = strtolower( $email );
+        if ( !is_email( $email ) ){
+            return false;
+        }
+        return $email;
+    }
+
+    public static function validate_and_format_phone( $phone ){
+        $phone = trim( $phone );
+        //match phones numbers with +
+        $phone = preg_replace( '/[^0-9+]/', '', $phone );
+        if ( str_starts_with( $phone, '00' ) ){
+            $phone = '+' . substr( $phone, 2 );
+        }
+        if ( strlen( $phone ) === 10 && !str_starts_with( $phone, '+' ) ){
+            $phone = '+1' . $phone;
+        }
+        if ( !str_starts_with( $phone, '+' ) ){
+            return false;
+        }
+
+        return $phone;
     }
 
 }

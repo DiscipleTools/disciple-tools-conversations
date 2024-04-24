@@ -60,59 +60,59 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
     }
 
     public function dt_post_create_fields( array $fields, string $post_type ){
-        if ( $post_type === 'contacts' ){
-
-        }
         return $fields;
+    }
+
+    private function check_for_com_handles( $contact_id, $fields ){
+        $contact = DT_Posts::get_post( 'contacts', $contact_id, true, false );
+        $contact_fields = DT_Posts::get_post_field_settings( 'contacts' );
+        $names = DT_Conversations_API::get_first_and_last_name( $contact['name'] );
+        foreach ( $fields as $key => $values ){
+            if ( !isset( $contact_fields[$key]['type'] ) || $contact_fields[$key]['type'] !== 'communication_channel' ){
+                continue;
+            }
+            foreach ( $values as $com_value ){
+                $conv_title = '';
+                $conv_type = '';
+                $conv_channels = [];
+                if ( $key === 'contact_email' ){
+                    $conv_title = DT_Conversations_API::validate_and_format_email( $com_value['value'] );
+                    $conv_type = 'email';
+                } else if ( $key === 'contact_phone' ){
+                    $conv_title = DT_Conversations_API::validate_and_format_phone( $com_value['value'] );
+                    $conv_type = 'phone';
+                } else if ( $key === 'contact_facebook' ){
+                    $conv_title = $com_value['value'];
+                    $conv_type = 'facebook';
+                }
+                //this conversation is already created
+                if ( in_array( $com_value['value'], DT_Conversations_API::array_key_values( $contact['conversations'] ?? [], 'post_title' ), true ) ){
+                    continue;
+                }
+                if ( empty( $conv_title ) || empty( $conv_type ) ){
+                    continue;
+                }
+                $conversation_fields = [
+                    'first_name' => $names['first_name'],
+                    'last_name' => $names['last_name'],
+                    'type' => $conv_type
+                ];
+                $create_or_update = DT_Conversations_API::create_or_update_conversation_record( $conv_title, $conversation_fields, $contact_id );
+            }
+        }
     }
 
     public function dt_post_created( string $post_type, int $post_id, array $initial_fields ){
         if ( $post_type === 'contacts' ){
-            $contact = DT_Posts::get_post( 'contacts', $post_id, true, false );
-
-            /** Auto create an email conversation on contact creation with an email address*/
-//            if ( isset( $contact['contact_email'] ) ){
-//                $names = DT_Conversations_API::get_first_and_last_name( $contact['name'] );
-//                foreach ( $contact['contact_email'] as $contact_email ){
-//                    if ( is_email( $contact_email['value'] ) ){
-//                        $conversation_fields = [
-//                            'name' => $contact_email['value'],
-//                            'first_name' => $names['first_name'],
-//                            'last_name' => $names['last_name'],
-//                            'type' => 'email'
-//                        ];
-//                        if ( isset( $initial_fields['sources'] ) ){
-//                            $conversation_fields['sources'] = $initial_fields['sources'];
-//                        }
-//
-//                        DT_Conversations_API::create_or_update_conversation_record( $contact_email['value'], $conversation_fields, $post_id );
-//                    }
-//                }
-//            }
+            $this->check_for_com_handles( $post_id, $initial_fields );
         }
     }
 
-    public function dt_post_updated( $post_type, $post_id, $initial_fields, $post_fields_before_update, $post ){
+    public function dt_post_updated( $post_type, $post_id, $request_fields, $post_fields_before_update, $post ){
         if ( $post_type === 'contacts' ){
             $contact = DT_Posts::get_post( 'contacts', $post_id, true, false );
             /** Auto create an email conversation on contact creation with an email address*/
-//            if ( isset( $contact['contact_email'] ) ){
-//                foreach ( $contact['contact_email'] as $contact_email ){
-//                    if ( is_email( $contact_email['value'] ) && !in_array( $contact_email['value'], DT_Conversations_API::array_key_values( $contact['emails'] ?? [], 'post_title' ), true ) ){
-//                        $names = DT_Conversations_API::get_first_and_last_name( $contact['name'] );
-//                        $email_fields = [
-//                            'name' => $contact_email['value'],
-//                            'first_name' => $names['first_name'],
-//                            'last_name' => $names['last_name'],
-//                            'type' => 'email',
-//                        ];
-//                        if ( isset( $initial_fields['sources'] ) ){
-//                            $email_fields['sources'] = $initial_fields['sources'];
-//                        }
-//                        DT_Conversations_API::create_or_update_conversation_record( $contact_email['value'], $email_fields, $post_id );
-//                    }
-//                }
-//            }
+            $this->check_for_com_handles( $post_id, $request_fields );
         }
     }
 
