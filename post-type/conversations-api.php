@@ -86,7 +86,13 @@ class DT_Conversations_API {
             if ( !isset( $fields['type'] ) ){
                 return new WP_Error( 'missing_type', 'Missing type field' );
             }
-            $fields['name'] = $handle;
+            if ( $fields['type'] === 'email' ){
+                $fields['name'] = self::validate_and_format_email( $handle );
+            } else if ( $fields['type'] === 'phone' ){
+                $fields['name'] = self::validate_and_format_phone( $handle );
+            } else {
+                $fields['name'] = $handle;
+            }
             if ( $contact_id ){
                 $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
             }
