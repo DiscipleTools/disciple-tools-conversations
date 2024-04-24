@@ -1,49 +1,25 @@
 ![Build Status](https://github.com/DiscipleTools/disciple-tools-conversations/actions/workflows/ci.yml/badge.svg?branch=master)
-## Dev notes, delete me:
-This is a starter plugin to jumpstart your work with Disciple.Tools.
-Click the "Use this template" button above.
-See instructions for refactoring and getting started in the [wiki](https://github.com/DiscipleTools/disciple-tools-conversations/wiki)
-See instructions for creating releases and publishing your plugin: [wiki](https://github.com/DiscipleTools/disciple-tools-conversations/wiki)
-In order to display the banner correctly on the Disciple.Tools Community Plugins Site, don't change the 'Plugin Banner' text on line 12; only the URL.
 
-## readme format:
-
-![Plugin Banner](https://raw.githubusercontent.com/DiscipleTools/disciple-tools-conversations/b30402d97895e3f911efcb47fb8f29ccd1eb92e5/documentation/banner.png)
+![Plugin Banner](https://raw.githubusercontent.com/DiscipleTools/disciple-tools-conversations/master/documentation/banner.png)
 
 # Disciple.Tools - Disciple.Tools Conversations
 
-Description Description Description Description Description Description Description
-Description Description Description Description Description Description Description
+This plugin adds the "conversations" record type to Disciple.Tools.
+Conversations are tracked on a conversation, be it emails, sms messages, WhatsApp messages, Facebook Messages.
 
 ## Purpose
 
-Purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose
-Purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose
+This plugin helps keep track on what channel a conversation is happening on. 
+It provides a way to track extra information like GDPR consent, newsletter opt-ins, conversation status and more.
+It also the plate to send message to a contact from the Disciple.Tools interface.
 
-Purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose
-Purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose purpose
+Each conversation is unique, which means no 2 conversations track the same email message or phone number.
 
-## Usage
+## Security
 
-#### Will Do
-
-- Item
-- Item
-- Item
-
-#### Will Not Do
-
-- Item
-- Item
-
-## Requirements
-
-- Disciple.Tools Theme installed on a Wordpress Server
-
-## Installing
-
-- Install as a standard Disciple.Tools/Wordpress plugin in the system Admin/Plugins area.
-- Requires the user role of Administrator.
+Mimicking contacts permissions. A User with access to all contacts can access all conversations
+A multiplier only has access to the conversations that they create or that are shared with them.
+If multiplier adds an emails or phone that already has a conversations attached to it, they don't automatically get access to the conversation.
 
 ## Contribution
 
@@ -53,8 +29,3 @@ in the [Discussions](https://github.com/DiscipleTools/disciple-tools-conversatio
 code contributions are welcome using the [Pull Request](https://github.com/DiscipleTools/disciple-tools-conversations/pulls)
 system for git. For a more details on contribution see the
 [contribution guidelines](https://github.com/DiscipleTools/disciple-tools-conversations/blob/master/CONTRIBUTING.md).
-
-
-## Screenshots
-
-![screenshot](documentation/community/starter-banners/banner-blue-green.png)
