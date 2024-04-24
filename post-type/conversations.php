@@ -54,6 +54,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 //        add_action( 'dt_post_updated', [ $this, 'dt_post_updated' ], 10, 5 );
 
         add_action( 'dt_comment_created', [ $this, 'dt_comment_created' ], 10, 4 );
+        add_filter( 'dt_filter_post_comments', [ $this, 'dt_filter_post_comments' ], 10, 3 );
 
 //        add_action( 'dt_record_after_details_section', [ $this, 'dt_record_after_details_section' ], 10, 2 );
 
@@ -250,6 +251,26 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             ];
         }
         return $sections;
+    }
+
+    public function dt_filter_post_comments( $comments, $post_type, $post_id ){
+        if ( $post_type === 'conversations' ){
+            foreach ( $comments as &$comment ){
+                if ( !empty( $comment['gravatar'] ) ){
+                    continue;
+                }
+                if ( $comment['comment_type'] === 'whatsapp' ){
+                    $comment['gravatar'] = get_template_directory_uri() . '/dt-assets/images/whatsapp.svg';
+                }
+                if ( $comment['comment_type'] === 'email' ){
+                    $comment['gravatar'] = get_template_directory_uri() . '/dt-assets/images/email.svg';
+                }
+                if ( $comment['comment_type'] === 'sms' ){
+                    $comment['gravatar'] = get_template_directory_uri() . '/dt-assets/images/social-media.svg';
+                }
+            }
+        }
+        return $comments;
     }
 
     public function dt_details_additional_section( $section, $post_type ){
