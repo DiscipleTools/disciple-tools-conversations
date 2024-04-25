@@ -1,0 +1,21 @@
+i.dt-font-icon {
+    font-size: 1.1rem;
+    padding: 0;
+}
+.conv-row {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    grid-gap: 5px;
+    justify-content: space-between;
+}
+.conv-row:hover {
+    background-color: #d1d0d0;
+}
+.row-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    grid-gap: 5px;
+}

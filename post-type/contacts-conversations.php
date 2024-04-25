@@ -158,37 +158,101 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
             <div class="cell small-12">
                 <div class="bordered-box" id="conversations-tile">
                     <h3 class="section-header">
+
                         Conversations
+                      <ul data-dropdown-menu class="dropdown menu" style="margin-left: 10px">
+                        <li>
+                          <a class="button hollow tiny menu-white-dropdown-arrow">+ Add an Email, Phone etc</a>
+                          <ul class="menu is-dropdown-submenu">
+                            <li>
+                              <button data-open="add-conversation-modal" data-action="email" class="button clear">
+                                <img class="dt-icon" src="<?php echo esc_html( get_template_directory_uri() . '/dt-assets/images/email.svg' ) ?>"/>
+                                Email
+                              </button>
+                            </li>
+                            <button data-open="add-conversation-modal" data-action="phone" class="button clear">
+                              <img class="dt-icon" src="<?php echo esc_html( get_template_directory_uri() . '/dt-assets/images/phone.svg' ) ?>"/>
+                              Phone
+                            </button>
+                          </ul>
+
+                        </li>
+                      </ul>
                     </h3>
+                    <style>
+                        i.dt-font-icon {
+                            font-size: 1.1rem;
+                            padding: 0;
+                        }
+                        .conv-row {
+                            display: flex;
+                            align-items: center;
+                            padding: 0.5rem 0.5rem;
+                            border-bottom: 1px solid #e0e0e0;
+                            grid-gap: 5px;
+                            justify-content: space-between;
+                        }
+                        .conv-row:hover {
+                            background-color: #d1d0d0;
+                        }
+                        .row-end {
+                            display: flex;
+                            align-items: center;
+                            justify-content: flex-end;
+                            grid-gap: 5px;
+                        }
+
+                    </style>
+                    <!-- Add modal -->
+                    <div class="reveal" id="add-conversation-modal" data-reveal>
+                        <h3>Add a Conversation</h3>
+                        <form>
+                            <label>
+                                <input type="text" placeholder="Conversation Title" />
+                            </label>
+                            <label>
+                                <select>
+                                    <option value="email">Email</option>
+                                    <option value="phone">Phone</option>
+                                    <option value="facebook">Facebook</option>
+                                </select>
+                            </label>
+                            <button class="button">Add</button>
+                        </form>
+                        <button class="close-button" data-close aria-label="Close modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <div class="section-body">
                         <?php foreach ( $cats as $key => $cat ) : ?>
-                            <div class="section-subheader">
-                                <?php echo esc_html( $cat['label'] ); ?> <button class="button tiny hollow">+</button>
-                            </div>
                             <?php foreach ( $conversations['posts'] as $conversation ) :
                                 if ( ( $conversation['type']['key'] ?? '' ) === $key ) : ?>
-                                    <style>
-                                        i.dt-font-icon {
-                                            font-size: 1.1rem;
-                                            padding: 0;
-                                        }
-                                    </style>
-                                    <div>
-                                        <img class="dt-icon" src="<?php echo esc_html( get_template_directory_uri() . '/dt-assets/images/' . $cat['icon'] ) ?>"/>
-                                        <?php echo esc_html( $conversation['name'] ); ?>
-                                        <?php echo esc_html( $conversation['status']['key'] ?? '' ); ?>
-                                        - 6 conversations -
-                                        subscribed to 2 lists
-                                        <a href="<?php echo esc_html( $conversation['permalink'] ); ?>"
-                                           data-action="view" data-tooltip title="<?php esc_html_e( 'View', 'disciple_tools' ) ?>" type="button" class="empty-select-button select-button small button view">
-                                            <i class="dt-font-icon mdi mdi-eye-outline"></i>
-                                        </a>
-                                        <button data-action="copy" data-tooltip title="<?php esc_html_e( 'Copy', 'disciple_tools' ) ?>" type="button" class="empty-select-button select-button small button view">
-                                            <i class="dt-font-icon mdi mdi-content-copy"></i>
-                                        </button>
-                                        <button data-action="delete" data-tooltip title="<?php esc_html_e( 'Delete', 'disciple_tools' ) ?>" type="button" class="empty-select-button select-button small button view">
-                                            <i class="dt-font-icon mdi mdi-delete-outline"></i>
-                                        </button>
+                                    <div class="conv-row">
+                                        <div class="row-start">
+                                          <img class="dt-icon" src="<?php echo esc_html( get_template_directory_uri() . '/dt-assets/images/' . $cat['icon'] ) ?>"/>
+                                          <?php echo esc_html( $conversation['name'] ); ?>
+                                          <?php echo esc_html( $conversation['status']['key'] ?? '' ); ?>
+
+                                        </div>
+                                        <div class="row-end">
+                                          <a href="<?php echo esc_html( $conversation['permalink'] ); ?>"
+                                             data-action="view" type="button" class="dt-tooltip dt-action-button small button view">
+                                              <span class="tooltiptext"><?php esc_html_e( 'View', 'disciple_tools' ); ?></span>
+                                              <i class="dt-font-icon mdi mdi-eye-outline"></i>
+                                          </a>
+                                          <button data-value="<?php echo esc_html( $conversation['name'] ); ?>"  type="button"
+                                                  class="dt-tooltip copy_to_clipboard dt-action-button small button view">
+                                              <span class="tooltiptext"><?php esc_html_e( 'Copy', 'disciple_tools' ); ?></span>
+                                              <i class="dt-font-icon mdi mdi-content-copy"></i>
+                                          </button>
+                                          <button data-action="delete"
+                                                  type="button"
+                                                  class="dt-tooltip dt-action-button small button view">
+                                              <span class="tooltiptext"><?php esc_html_e( 'Delete', 'disciple_tools' ); ?></span>
+                                              <i class="dt-font-icon mdi mdi-delete-outline"></i>
+                                          </button>
+                                        </div>
+
                                     </div>
                                 <?php endif;
                             endforeach; ?>
