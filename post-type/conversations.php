@@ -229,6 +229,12 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
     }
 
     public function dt_details_additional_tiles( $tiles, $post_type = '' ){
+
+        $tiles['conversation_tile'] = [
+            'label' => __( 'Conversation', 'disciple-tools-prayer-campaigns' ),
+            'hidden' => false,
+        ];
+
         return $tiles;
     }
     public function add_comment_section( $sections, $post_type ){
@@ -275,15 +281,16 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 
     public function dt_details_additional_section( $section, $post_type ){
 
-        if ( $post_type === $this->post_type && $section === 'other' ) {
+        if ( $post_type === $this->post_type && $section === 'conversation_tile' ) {
             $fields = DT_Posts::get_post_field_settings( $post_type );
             $post = DT_Posts::get_post( $this->post_type, get_the_ID() );
             ?>
             <div class="section-subheader">
-                <?php esc_html_e( 'Custom Section Contact', 'disciple-tools-conversations' ) ?>
-            </div>
-            <div>
-                <p>Add information or custom fields here</p>
+                <div class="smm-conversation-list">
+                    <!-- <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $post ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlyCurrentConversation></smm-conversation-list> -->
+
+                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> conversation=></smm-chat-window>
+                </div>
             </div>
 
         <?php }
@@ -388,10 +395,14 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 
     // scripts
     public function scripts(){
-        if ( is_singular( $this->post_type ) && get_the_ID() && DT_Posts::can_view( $this->post_type, get_the_ID() ) ){
-            $test = '';
+        // @todo add check  for 'Can view social conversations' capability
+        // if ( ) ){
             // @todo add enqueue scripts
-        }
+            wp_enqueue_script( 'conversation_scripts', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/conversation_scripts.js', [], filemtime( plugin_dir_path( __DIR__ ) . 'dist/conversation_scripts.js' ) );
+
+            wp_register_style( 'conversation_css', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/styles.css', [], filemtime( trailingslashit( plugin_dir_path( __DIR__ ) ) . 'dist/styles.css' ) );
+            wp_enqueue_style( 'conversation_css' );
+        // }
     }
 
     public function dt_add_section( $post_type, $post ) {
