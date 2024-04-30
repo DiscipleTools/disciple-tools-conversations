@@ -78,14 +78,14 @@ export class smmChatMessage extends DtBase {
     return html`
       <div class="${classMap(classes)}">
           <div class="chat-message__avatar">
-            <img src="${this.message.avatar}" alt="${this.message.name}" />
+            ${this.message.avatar ? html`<img src="${this.message.avatar}" alt="${this.message.comment_author}" />` : html`<dt-icon icon="user" size="2em"></dt-icon>`}
           </div>
         <div class="chat-message__body">
           <div class="chat-message__header">
-            <div class="chat-message__name">${this.message.name}</div>
-            <div class="chat-message__date">${this._formatDate( this.message.date )}</div>
+            <div class="chat-message__name">${this.message.comment_author}</div>
+            <div class="chat-message__date">${this._formatDate( this.message.comment_date )}</div>
           </div>
-          <div class="chat-message__text">${this.message.body}</div>
+          <div class="chat-message__text">${this.message.comment_content}</div>
         </div>
       </div>
     `;

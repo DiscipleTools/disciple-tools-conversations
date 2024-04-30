@@ -8150,7 +8150,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lit_directives_class_map_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lit/directives/class-map.js */ "./node_modules/lit/directives/class-map.js");
 /* harmony import */ var _disciple_tools_web_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @disciple.tools/web-components */ "./node_modules/@disciple.tools/web-components/index.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-var _templateObject, _templateObject2;
+var _templateObject, _templateObject2, _templateObject3, _templateObject4;
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -8192,12 +8192,12 @@ var smmChatMessage = /*#__PURE__*/function (_DtBase) {
         outgoing: false,
         'chat-message': true
       };
-      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n      <div class=\"", "\">\n          <div class=\"chat-message__avatar\">\n            <img src=\"", "\" alt=\"", "\" />\n          </div>\n        <div class=\"chat-message__body\">\n          <div class=\"chat-message__header\">\n            <div class=\"chat-message__name\">", "</div>\n            <div class=\"chat-message__date\">", "</div>\n          </div>\n          <div class=\"chat-message__text\">", "</div>\n        </div>\n      </div>\n    "])), (0,lit_directives_class_map_js__WEBPACK_IMPORTED_MODULE_2__.classMap)(classes), this.message.avatar, this.message.name, this.message.name, this._formatDate(this.message.date), this.message.body);
+      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n      <div class=\"", "\">\n          <div class=\"chat-message__avatar\">\n            ", "\n          </div>\n        <div class=\"chat-message__body\">\n          <div class=\"chat-message__header\">\n            <div class=\"chat-message__name\">", "</div>\n            <div class=\"chat-message__date\">", "</div>\n          </div>\n          <div class=\"chat-message__text\">", "</div>\n        </div>\n      </div>\n    "])), (0,lit_directives_class_map_js__WEBPACK_IMPORTED_MODULE_2__.classMap)(classes), this.message.avatar ? (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["<img src=\"", "\" alt=\"", "\" />"])), this.message.avatar, this.message.comment_author) : (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)(_templateObject3 || (_templateObject3 = _taggedTemplateLiteral(["<dt-icon icon=\"user\" size=\"2em\"></dt-icon>"]))), this.message.comment_author, this._formatDate(this.message.comment_date), this.message.comment_content);
     }
   }], [{
     key: "styles",
     get: function get() {
-      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.css)(_templateObject2 || (_templateObject2 = _taggedTemplateLiteral(["\n      :host {\n        --smm-incoming-message-background: var(--gray-1, #919191);\n        --smm-outgoing-message-background: var(--success-color, #4caf50);\n      }\n      .chat-message {\n        display: flex;\n        align-items: flex-end;\n        margin-bottom: 1em;\n        flex-direction: row-reverse;\n      }\n\n      .chat-message__avatar {\n        width: clamp(3em, 5vw, 5em);\n      }\n\n      .chat-message__avatar img {\n        width: 100%;\n        border-radius: 50%;\n      }\n\n      .chat-message__body {\n        max-width: clamp(10em, 52vw, 60%);\n        padding: 1em;\n        border-radius: 1em;\n        /* @todo make this right to left compatible */\n        border-bottom-right-radius: 0;\n        background: var(--smm-outgoing-message-background);\n      }\n\n      .chat-message__header {\n        display: flex;\n        flex-direction: row;\n        justify-content: space-between;\n      }\n\n      .chat-message__name {\n        font-weight: bold;\n        font-size: 1.1em;\n      }\n      .chat-message.incoming {\n        flex-direction: row;\n      }\n\n      .chat-message.incoming .chat-message__body {\n        background: var(--smm-incoming-message-background);\n        /* @todo make this right to left compatible */\n        border-bottom-right-radius: 1em;\n        border-bottom-left-radius: 0;\n      }\n      "])));
+      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.css)(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n      :host {\n        --smm-incoming-message-background: var(--gray-1, #919191);\n        --smm-outgoing-message-background: var(--success-color, #4caf50);\n      }\n      .chat-message {\n        display: flex;\n        align-items: flex-end;\n        margin-bottom: 1em;\n        flex-direction: row-reverse;\n      }\n\n      .chat-message__avatar {\n        width: clamp(3em, 5vw, 5em);\n      }\n\n      .chat-message__avatar img {\n        width: 100%;\n        border-radius: 50%;\n      }\n\n      .chat-message__body {\n        max-width: clamp(10em, 52vw, 60%);\n        padding: 1em;\n        border-radius: 1em;\n        /* @todo make this right to left compatible */\n        border-bottom-right-radius: 0;\n        background: var(--smm-outgoing-message-background);\n      }\n\n      .chat-message__header {\n        display: flex;\n        flex-direction: row;\n        justify-content: space-between;\n      }\n\n      .chat-message__name {\n        font-weight: bold;\n        font-size: 1.1em;\n      }\n      .chat-message.incoming {\n        flex-direction: row;\n      }\n\n      .chat-message.incoming .chat-message__body {\n        background: var(--smm-incoming-message-background);\n        /* @todo make this right to left compatible */\n        border-bottom-right-radius: 1em;\n        border-bottom-left-radius: 0;\n      }\n      "])));
     }
   }, {
     key: "properties",
@@ -8233,10 +8233,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lit_directives_style_map_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lit/directives/style-map.js */ "./node_modules/lit/directives/style-map.js");
 /* harmony import */ var _disciple_tools_web_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @disciple.tools/web-components */ "./node_modules/@disciple.tools/web-components/index.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-var _templateObject, _templateObject2, _templateObject3, _templateObject4, _templateObject5;
+var _templateObject, _templateObject2, _templateObject3, _templateObject4, _templateObject5, _templateObject6;
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -8258,8 +8261,12 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 var smmChatWindow = /*#__PURE__*/function (_DtBase) {
   function smmChatWindow() {
+    var _this;
     _classCallCheck(this, smmChatWindow);
-    return _callSuper(this, smmChatWindow);
+    _this = _callSuper(this, smmChatWindow);
+    _this.conversation_messages = window.commentsSettings.comments.comments;
+    console.log(_this.conversation_messages);
+    return _this;
   }
   _inherits(smmChatWindow, _DtBase);
   return _createClass(smmChatWindow, [{
@@ -8278,27 +8285,27 @@ var smmChatWindow = /*#__PURE__*/function (_DtBase) {
   }, {
     key: "claimConvo",
     value: function claimConvo() {
-      var _this = this;
+      var _this2 = this;
       var payload = {
         claimed: true,
         claimed_by: this.userid
       };
       API.update_post('smm_conversation', this.convoid, payload).then(function (response) {
-        _this.conversation = response;
-        _this.claimed = true;
+        _this2.conversation = response;
+        _this2.claimed = true;
       });
     }
   }, {
     key: "unclaimConvo",
     value: function unclaimConvo() {
-      var _this2 = this;
+      var _this3 = this;
       var payload = {
         claimed: false,
         claimed_by: 0
       };
       API.update_post('smm_conversation', this.convoid, payload).then(function (response) {
-        _this2.conversation = response;
-        _this2.claimed = false;
+        _this3.conversation = response;
+        _this3.claimed = false;
       });
     }
   }, {
@@ -8338,15 +8345,29 @@ var smmChatWindow = /*#__PURE__*/function (_DtBase) {
         date: '2021-01-01',
         body: 'This is test reply.'
       };
+      var messagesTemplates = [];
+      var _iterator = _createForOfIteratorHelper(this.conversation_messages),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var i = _step.value;
+          console.log(i);
+          messagesTemplates.push((0,lit__WEBPACK_IMPORTED_MODULE_0__.html)(_templateObject5 || (_templateObject5 = _taggedTemplateLiteral(["<smm-chat-message .message=", " incomingMessage></smm-chat-message>"])), i));
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
       var moreActionsStyles = {
         display: this.moreActionOpen ? 'grid' : 'none'
       };
-      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n      <div class=\"chat-window\">\n        <div class=\"chat-window__header\">\n          <img src=\"https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50\" height=\"250px\" width=\"250px\" alt=\"John Smith\" class=\"avatar\"/>\n          <h1 class=\"name\">John Smith</h1>\n          <span class=\"location\">Istanbul, Turkey</span>\n          <span class=\"age\">25 years old</span>\n\n          <div class=\"action-buttons container\">\n              <button>\n                <dt-icon class=\"delete_icon\" icon=\"material-symbols:delete-outline\"></dt-icon>\n              </button>\n              <button>\n                <dt-icon class=\"check_icon\" icon=\"material-symbols:check-small\"></dt-icon>\n              </button>\n              <button>\n                <dt-icon class=\"more_icon\" icon=\"material-symbols:more-vert\" @click=", "></dt-icon>\n              </button>\n              <ul id=\"moreActions\"  style=", ">\n                <li><button @click=", ">Release This Conversation</button></li>\n                <li><button @click=", ">Claim This Conversation for yourself</button></li>\n              </ul>\n          </div>\n\n        </div>\n        <div class=\"conversation\">\n          <smm-chat-message .message=", " incomingMessage></smm-chat-message>\n          <smm-chat-message .message=", "></smm-chat-message>\n          <smm-chat-message .message=", " incomingMessage></smm-chat-message>\n          <smm-chat-message .message=", "></smm-chat-message>\n          <smm-chat-message .message=", " incomingMessage></smm-chat-message>\n          <smm-chat-message .message=", "></smm-chat-message>\n          <smm-chat-message .message=", " incomingMessage></smm-chat-message>\n          <smm-chat-message .message=", "></smm-chat-message>\n          <smm-chat-message .message=", " incomingMessage></smm-chat-message>\n          <smm-chat-message .message=", "></smm-chat-message>\n          <smm-chat-message .message=", " incomingMessage></smm-chat-message>\n          <smm-chat-message .message=", "></smm-chat-message>\n        </div>\n        <div class=\"chat-window__footer\">\n          ", "\n        </div>\n      </div>\n    "])), this._moreActions, (0,lit_directives_style_map_js__WEBPACK_IMPORTED_MODULE_2__.styleMap)(moreActionsStyles), this.unclaimConvo, this.claimConvo, fakeMessageIn, fakeMessageOut, fakeMessageIn, fakeMessageOut, fakeMessageIn, fakeMessageOut, fakeMessageIn, fakeMessageOut, fakeMessageIn, fakeMessageOut, fakeMessageIn, fakeMessageOut, this._chatWindowFooterRender());
+      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.html)(_templateObject4 || (_templateObject4 = _taggedTemplateLiteral(["\n      <div class=\"chat-window\">\n        <div class=\"chat-window__header\">\n          <img src=\"https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50\" height=\"250px\" width=\"250px\" alt=\"John Smith\" class=\"avatar\"/>\n          <h1 class=\"name\">John Smith</h1>\n          <span class=\"location\">Istanbul, Turkey</span>\n          <span class=\"age\">25 years old</span>\n\n          <div class=\"action-buttons container\">\n              <button>\n                <dt-icon class=\"delete_icon\" icon=\"material-symbols:delete-outline\"></dt-icon>\n              </button>\n              <button>\n                <dt-icon class=\"check_icon\" icon=\"material-symbols:check-small\"></dt-icon>\n              </button>\n              <button>\n                <dt-icon class=\"more_icon\" icon=\"material-symbols:more-vert\" @click=", "></dt-icon>\n              </button>\n              <ul id=\"moreActions\"  style=", ">\n                <li><button @click=", ">Release This Conversation</button></li>\n                <li><button @click=", ">Claim This Conversation for yourself</button></li>\n              </ul>\n          </div>\n\n        </div>\n        <div class=\"conversation\">\n          ", "\n        </div>\n        <div class=\"chat-window__footer\">\n          ", "\n        </div>\n      </div>\n    "])), this._moreActions, (0,lit_directives_style_map_js__WEBPACK_IMPORTED_MODULE_2__.styleMap)(moreActionsStyles), this.unclaimConvo, this.claimConvo, messagesTemplates, this._chatWindowFooterRender());
     }
   }], [{
     key: "styles",
     get: function get() {
-      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.css)(_templateObject5 || (_templateObject5 = _taggedTemplateLiteral(["\n      :host {\n      }\n      .chat-window {\n        display: flex;\n        flex-direction: column;\n        height: 100%;\n        width: 100%;\n      }\n      .chat-window__header {\n        flex: 1;\n        display: grid;\n        grid-template-columns: 1fr 2fr 1fr;\n        gap: 0em 1em;\n        border-bottom: 1px solid var(--border-color);\n        line-height: 1em;\n        padding: 1em 0.25em;\n      }\n      .chat-window__header .avatar {\n        width: clamp(3em, 100%, 5em);\n        height: clamp(3em, 100%, 5em);\n        aspect-ratio: 1 / 1;\n        border-radius: 50%;\n        grid-area: 1 / 1 / span 3 / auto;\n        justify-self: flex-start;\n        place-self: center;\n      }\n      .chat-window__header h1 {\n        margin: 0;\n        line-height: 1;\n        font-size: clamp(1.5em, 2vw, 2em);\n        color: var(--primary-color);\n        grid-row: 1;\n        grid-column: 2;\n      }\n\n      .chat-window__header .location {\n        grid-column: 2;\n        grid-row: 2;\n      }\n\n      .chat-window__header .age {\n        grid-column: 2;\n        grid-row: 3;\n      }\n\n      .chat-window__header .action-buttons.container {\n        grid-column: 3;\n        grid-row: span 3;\n        display: flex;\n        gap: 5px;\n        padding: 0.25em;\n        place-self: center;\n      }\n\n      #moreActions {\n        display: none;\n        margin: 0;\n        padding: 0;\n        list-style: none;\n        transform: translate(0, 2.5em);\n        width: 7.5em;\n        position: absolute;\n        background: var(--gray-1);\n      }\n\n      #moreAction.open {\n        display: grid;\n      }\n\n      #moreActions li {\n        display: block;\n        width: 100%;\n        height: 3em;\n      }\n\n      #moreActions li button {\n        width: 100%;\n        height: 100%;\n        display: block;\n      }\n\n      .chat-window__header .action-buttons.container button {\n        width: 2.5em;\n        height: 2.5em;\n        padding: 0;\n      }\n\n      .chat-window__header .action-buttons.container button dt-icon {\n        font-size: clamp(1.5em, 2vw, 2em);\n      }\n\n      .conversation {\n        flex: 10;\n        overflow: auto;\n        padding: 1em 0;\n      }\n      .chat-window__footer {\n        flex: 1 2 0px;\n        border-top: 1px solid var(--border-color);\n        display: grid;\n        grid-template-columns: 10fr 1fr;\n        gap: 10px;\n        padding: 1em 0.5em 1em 1em;\n        place-content: center space-between;\n        place-items: stretch;\n        align-items: center;\n      }\n\n      .chat-window__footer textarea {\n        grid-row-start: 1;\n        grid-column-start: 1;\n        border-radius: 0.25em;\n        border: 1px solid var(--border-color);\n        resize: none;\n        padding: 1em;\n      }\n\n      .chat-window__footer .send-button {\n        background: var(--primary-color);\n        border: none;\n        color: var(--text-color-inverse);\n        height: 3.5em;\n        width: 3.5em;\n        border-radius: 50%;\n        grid-row-start: 1;\n        grid-column-start: 2;\n        justify-self: center;\n      }\n      "])));
+      return (0,lit__WEBPACK_IMPORTED_MODULE_0__.css)(_templateObject6 || (_templateObject6 = _taggedTemplateLiteral(["\n      :host {\n      }\n      .chat-window {\n        display: flex;\n        flex-direction: column;\n        height: 100%;\n        width: 100%;\n      }\n      .chat-window__header {\n        flex: 1;\n        display: grid;\n        grid-template-columns: 1fr 2fr 1fr;\n        gap: 0em 1em;\n        border-bottom: 1px solid var(--border-color);\n        line-height: 1em;\n        padding: 1em 0.25em;\n      }\n      .chat-window__header .avatar {\n        width: clamp(3em, 100%, 5em);\n        height: clamp(3em, 100%, 5em);\n        aspect-ratio: 1 / 1;\n        border-radius: 50%;\n        grid-area: 1 / 1 / span 3 / auto;\n        justify-self: flex-start;\n        place-self: center;\n      }\n      .chat-window__header h1 {\n        margin: 0;\n        line-height: 1;\n        font-size: clamp(1.5em, 2vw, 2em);\n        color: var(--primary-color);\n        grid-row: 1;\n        grid-column: 2;\n      }\n\n      .chat-window__header .location {\n        grid-column: 2;\n        grid-row: 2;\n      }\n\n      .chat-window__header .age {\n        grid-column: 2;\n        grid-row: 3;\n      }\n\n      .chat-window__header .action-buttons.container {\n        grid-column: 3;\n        grid-row: span 3;\n        display: flex;\n        gap: 5px;\n        padding: 0.25em;\n        place-self: center;\n      }\n\n      #moreActions {\n        display: none;\n        margin: 0;\n        padding: 0;\n        list-style: none;\n        transform: translate(0, 2.5em);\n        width: 7.5em;\n        position: absolute;\n        background: var(--gray-1);\n      }\n\n      #moreAction.open {\n        display: grid;\n      }\n\n      #moreActions li {\n        display: block;\n        width: 100%;\n        height: 3em;\n      }\n\n      #moreActions li button {\n        width: 100%;\n        height: 100%;\n        display: block;\n      }\n\n      .chat-window__header .action-buttons.container button {\n        width: 2.5em;\n        height: 2.5em;\n        padding: 0;\n      }\n\n      .chat-window__header .action-buttons.container button dt-icon {\n        font-size: clamp(1.5em, 2vw, 2em);\n      }\n\n      .conversation {\n        flex: 10;\n        overflow: auto;\n        padding: 1em 0;\n      }\n      .chat-window__footer {\n        flex: 1 2 0px;\n        border-top: 1px solid var(--border-color);\n        display: grid;\n        grid-template-columns: 10fr 1fr;\n        gap: 10px;\n        padding: 1em 0.5em 1em 1em;\n        place-content: center space-between;\n        place-items: stretch;\n        align-items: center;\n      }\n\n      .chat-window__footer textarea {\n        grid-row-start: 1;\n        grid-column-start: 1;\n        border-radius: 0.25em;\n        border: 1px solid var(--border-color);\n        resize: none;\n        padding: 1em;\n      }\n\n      .chat-window__footer .send-button {\n        background: var(--primary-color);\n        border: none;\n        color: var(--text-color-inverse);\n        height: 3.5em;\n        width: 3.5em;\n        border-radius: 50%;\n        grid-row-start: 1;\n        grid-column-start: 2;\n        justify-self: center;\n      }\n      "])));
     }
   }, {
     key: "properties",
@@ -8369,6 +8390,9 @@ var smmChatWindow = /*#__PURE__*/function (_DtBase) {
         },
         conversation: {
           type: Object
+        },
+        conversation_messages: {
+          type: Array
         },
         moreActionOpen: {
           type: Boolean

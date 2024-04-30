@@ -147,12 +147,15 @@ export class smmChatWindow extends DtBase {
       convoid: { type: Number },
       userid: { type: Number },
       conversation: { type: Object },
+      conversation_messages: { type: Array },
       moreActionOpen: { type: Boolean },
     };
   }
 
   constructor() {
     super();
+    this.conversation_messages = window.commentsSettings.comments.comments;
+    console.log(this.conversation_messages);
   }
 
   connectedCallback() {
@@ -237,6 +240,13 @@ export class smmChatWindow extends DtBase {
       body: 'This is test reply.',
     }
 
+    const messagesTemplates = [];
+
+    for (const i of this.conversation_messages) {
+      console.log(i);
+      messagesTemplates.push(html`<smm-chat-message .message=${i} incomingMessage></smm-chat-message>`);
+    }
+
     const moreActionsStyles = {
       display: this.moreActionOpen ? 'grid' : 'none',
     };
@@ -267,18 +277,7 @@ export class smmChatWindow extends DtBase {
 
         </div>
         <div class="conversation">
-          <smm-chat-message .message=${fakeMessageIn} incomingMessage></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageOut}></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageIn} incomingMessage></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageOut}></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageIn} incomingMessage></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageOut}></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageIn} incomingMessage></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageOut}></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageIn} incomingMessage></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageOut}></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageIn} incomingMessage></smm-chat-message>
-          <smm-chat-message .message=${fakeMessageOut}></smm-chat-message>
+          ${messagesTemplates}
         </div>
         <div class="chat-window__footer">
           ${this._chatWindowFooterRender()}
