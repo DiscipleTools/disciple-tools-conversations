@@ -9,6 +9,7 @@ mix.webpackConfig({
 
 mix.setPublicPath('dist')
   .js('assets/js/conversation_scripts.js', 'dist/conversation_scripts.js')
+  .sourceMaps()
   .postCss('assets/css/styles.css', 'dist/styles.css')
   .browserSync({
     proxy: "https://dt.local",

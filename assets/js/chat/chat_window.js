@@ -4,6 +4,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { DtBase } from "@disciple.tools/web-components";
 
 
+
 export class smmChatWindow extends DtBase {
   static get styles() {
     return css`
@@ -154,8 +155,7 @@ export class smmChatWindow extends DtBase {
 
   constructor() {
     super();
-    this.conversation_messages = window.commentsSettings.comments.comments;
-    console.log(this.conversation_messages);
+    // this.conversation_messages = window.commentsSettings.comments.comments;
   }
 
   connectedCallback() {
@@ -164,19 +164,30 @@ export class smmChatWindow extends DtBase {
 
   ChatButtonClick(e) {
     let messageText = this.shadowRoot.querySelector('textarea').value;
-    //We will do something with this later
-    console.log(messageText);
 
-    this.shadowRoot.querySelector('textarea').value = '';
+    const payload = {
+      comment: messageText,
+      comment_type: "whatsapp"
+    }
+
+    API.post_comment('conversations', this.convoid, messageText, "whatsapp").then((response) => {
+      this.getPostComments();
+      this.shadowRoot.querySelector('textarea').value = '';
+    });
+  }
+
+  getPostComments() {
+    API.get_comments('conversations', this.convoid).then((response) =>  {
+      this.conversation_messages = response;
+    });
   }
 
   claimConvo() {
     const payload = {
-      claimed: true,
-      claimed_by: this.userid,
+      assigned_to: this.userid,
     };
 
-    API.update_post('smm_conversation', this.convoid, payload).then((response) => {
+    API.update_post('conversations', this.convoid, payload).then((response) => {
       this.conversation = response;
       this.claimed = true;
     });
@@ -185,9 +196,9 @@ export class smmChatWindow extends DtBase {
   unclaimConvo() {
     const payload = {
       claimed: false,
-      claimed_by: 0,
+      assigned_to: 0,
     };
-    API.update_post('smm_conversation', this.convoid, payload).then((response) => {
+    API.update_post('conversations', this.convoid, payload).then((response) => {
       this.conversation = response;
       this.claimed = false;
     });
@@ -202,8 +213,8 @@ export class smmChatWindow extends DtBase {
   }
 
   _chatWindowFooterRender() {
-    if (this.claimed) {
-        if (this.userid != this.conversation.claimed_by.id) {
+    if (this.conversation.assigned_to) {
+        if (this.userid != this.conversation.assigned_to.id) {
           return html`
             <span>This Conversation is claimed by another user</span>
             <button @click=${this.claimConvo}>Claim this Conversation</button>`
@@ -226,24 +237,9 @@ export class smmChatWindow extends DtBase {
   }
 
   render() {
-    let fakeMessageIn = {
-      name: 'John Doe',
-      avatar: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
-      date: '2021-01-01',
-      body: 'This is a test message.',
-    }
-
-    let fakeMessageOut = {
-      name: 'CodeZone',
-      avatar: 'https://dt.local/wp-content/plugins/disciple-tools-social-media-manager/assets/logo.svg',
-      date: '2021-01-01',
-      body: 'This is test reply.',
-    }
-
     const messagesTemplates = [];
 
-    for (const i of this.conversation_messages) {
-      console.log(i);
+    for (const i of this.conversation_messages.comments) {
       messagesTemplates.push(html`<smm-chat-message .message=${i} incomingMessage></smm-chat-message>`);
     }
 

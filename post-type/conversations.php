@@ -176,15 +176,15 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 'show_in_table' => 10,
             ];
 
-//            $fields['assigned_to'] = [
-//                'name'        => __( 'Assigned To', 'disciple-tools-conversations' ),
-//                'description' => __( 'Select the main person who is responsible for reporting on this record.', 'disciple-tools-conversations' ),
-//                'type'        => 'user_select',
-//                'default'     => '',
-//                'tile' => 'status',
-//                'icon' => get_template_directory_uri() . '/dt-assets/images/assigned-to.svg',
-//                'show_in_table' => 16,
-//            ];
+           $fields['assigned_to'] = [
+               'name'        => __( 'Assigned To', 'disciple-tools-conversations' ),
+               'description' => __( 'Select the main person who is responsible for reporting on this record.', 'disciple-tools-conversations' ),
+               'type'        => 'user_select',
+               'default'     => '',
+               'tile' => 'status',
+               'icon' => get_template_directory_uri() . '/dt-assets/images/assigned-to.svg',
+               'show_in_table' => 16,
+           ];
 
             $fields['contacts'] = [
                 'name' => __( 'Contacts', 'disciple-tools-conversations' ),
@@ -284,12 +284,11 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         if ( $post_type === $this->post_type && $section === 'conversation_tile' ) {
             $fields = DT_Posts::get_post_field_settings( $post_type );
             $post = DT_Posts::get_post( $this->post_type, get_the_ID() );
+            $post_comments = DT_Posts::get_post_comments( $post_type, $post['ID'] );
             ?>
             <div class="section-subheader">
                 <div class="smm-conversation-list">
-                    <!-- <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $post ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlyCurrentConversation></smm-conversation-list> -->
-
-                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> conversation=></smm-chat-window>
+                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> conversation=<?php echo esc_attr( wp_json_encode( $post ) ) ?> conversation_messages='<?php  echo esc_attr( wp_json_encode( $post_comments ) )?>' ></smm-chat-window>
                 </div>
             </div>
 
