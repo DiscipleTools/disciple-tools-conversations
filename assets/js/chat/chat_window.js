@@ -12,7 +12,7 @@ export class smmChatWindow extends DtBase {
       .chat-window {
         display: flex;
         flex-direction: column;
-        height: 100%;
+        height: 75dvh;
         width: 100%;
       }
       .chat-window__header {
@@ -42,7 +42,7 @@ export class smmChatWindow extends DtBase {
         grid-column: 2;
       }
 
-      .chat-window__header .location {
+      .chat-window__header .channel {
         grid-column: 2;
         grid-row: 2;
       }
@@ -101,7 +101,7 @@ export class smmChatWindow extends DtBase {
       .conversation {
         flex: 10;
         padding: 1em 0;
-        max-height: 50dvh;
+        height: 50dvh;
         overflow-y: scroll;
         overscroll-behavior-y: contain;
         scroll-snap-type: y proximity;
@@ -172,6 +172,16 @@ export class smmChatWindow extends DtBase {
 
   connectedCallback() {
     super.connectedCallback();
+
+    document.addEventListener('commentsRetrieved', (e) => {
+      this.getPostComments()
+    } );
+
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('commentsRetrieved', this.getPostComments() );
   }
 
   ChatButtonClick(e) {
@@ -191,6 +201,7 @@ export class smmChatWindow extends DtBase {
   getPostComments() {
     API.get_comments('conversations', this.convoid).then((response) =>  {
       this.conversation_messages = response;
+      console.log(this.conversation_messages)
     });
   }
 
@@ -259,14 +270,15 @@ export class smmChatWindow extends DtBase {
     const moreActionsStyles = {
       display: this.moreActionOpen ? 'grid' : 'none',
     };
+    const name = this.conversation.first_name||this.conversation.last_name ? `${this.conversation.first_name} ${this.conversation.last_name}` : this.conversation.name;
 
     return html`
       <div class="chat-window">
         <div class="chat-window__header">
           <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" height="250px" width="250px" alt="John Smith" class="avatar"/>
-          <h1 class="name">John Smith</h1>
-          <span class="location">Istanbul, Turkey</span>
-          <span class="age">25 years old</span>
+          <h1 class="name">${name}</h1>
+          <span class="channel">${this.conversation.type.label}</span>
+          <!-- <span class="age">25 years old</span> -->
 
           <div class="action-buttons container">
               <button>
