@@ -4,7 +4,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { DtBase } from "@disciple.tools/web-components";
 
 
-
 export class smmChatWindow extends DtBase {
   static get styles() {
     return css`
@@ -101,9 +100,22 @@ export class smmChatWindow extends DtBase {
 
       .conversation {
         flex: 10;
-        overflow: auto;
         padding: 1em 0;
+        max-height: 50dvh;
+        overflow-y: scroll;
+        overscroll-behavior-y: contain;
+        scroll-snap-type: y proximity;
       }
+
+      .conversation * {
+        overflow-anchor: none;
+      }
+
+      #anchor {
+        scroll-snap-align: end;
+        height: 1px;
+      }
+
       .chat-window__footer {
         flex: 1 2 0px;
         border-top: 1px solid var(--border-color);
@@ -242,6 +254,7 @@ export class smmChatWindow extends DtBase {
     for (const i of this.conversation_messages.comments) {
       messagesTemplates.push(html`<smm-chat-message .message=${i} incomingMessage></smm-chat-message>`);
     }
+    messagesTemplates.reverse();
 
     const moreActionsStyles = {
       display: this.moreActionOpen ? 'grid' : 'none',
@@ -274,6 +287,7 @@ export class smmChatWindow extends DtBase {
         </div>
         <div class="conversation">
           ${messagesTemplates}
+          <div id="anchor"></div>
         </div>
         <div class="chat-window__footer">
           ${this._chatWindowFooterRender()}
