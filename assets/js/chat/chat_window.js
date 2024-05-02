@@ -263,7 +263,7 @@ export class smmChatWindow extends DtBase {
     const messagesTemplates = [];
 
     for (const i of this.conversation_messages.comments) {
-      messagesTemplates.push(html`<smm-chat-message .message=${i} ${i.comment_author === this.conversation.name ? 'incomingMessage' : ''}></smm-chat-message>`);
+      messagesTemplates.push(html`<smm-chat-message .message=${i} .incomingMessage=${i.comment_author === this.conversation.name ? true : false} ></smm-chat-message>`);
     }
     messagesTemplates.reverse();
 
