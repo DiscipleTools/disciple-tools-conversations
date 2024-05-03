@@ -167,11 +167,13 @@ export class smmChatWindow extends DtBase {
 
   constructor() {
     super();
-    // this.conversation_messages = window.commentsSettings.comments.comments;
+    this.conversation_messages = window.commentsSettings.comments.comments;
   }
 
   connectedCallback() {
     super.connectedCallback();
+
+    this.comment_polling();
 
     document.addEventListener('commentsRetrieved', (e) => {
       this.getPostComments()
@@ -183,6 +185,34 @@ export class smmChatWindow extends DtBase {
     super.disconnectedCallback();
     document.removeEventListener('commentsRetrieved', this.getPostComments() );
   }
+
+comment_polling(){
+  const commentDateGMT = new Date(`${this.conversation_messages.comments[0].comment_date_gmt}Z`);//The Z makes sure the date is in GMT
+  const currentDateGMT = new Date();
+
+  const diffInMilliseconds = currentDateGMT - commentDateGMT;
+  const diffInMinutes = diffInMilliseconds / (1000 * 60);
+  let nextCheck;
+console.log(this.conversation_messages.comments[0].comment_date_gmt);
+  console.log(commentDateGMT);
+  console.log(currentDateGMT);
+
+  console.log(diffInMinutes);
+  if ( diffInMinutes > 5 && diffInMinutes < 15 ) {
+    console.log('The comment_date_gmt is more than 5 minutes ago.');
+    nextCheck = 60000;
+  } else if ( diffInMinutes > 15 ) {
+    console.log('The comment_date_gmt is more than 15 minutes ago.');
+    nextCheck = 300000;
+  } else {
+    console.log('The comment_date_gmt is less than 5 minutes ago.');
+    nextCheck = 5000;
+  }
+
+  this.getPostComments();
+
+  setTimeout(() => { this.comment_polling() }, nextCheck);
+}
 
   ChatButtonClick(e) {
     let messageText = this.shadowRoot.querySelector('textarea').value;
