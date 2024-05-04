@@ -193,19 +193,14 @@ comment_polling(){
   const diffInMilliseconds = currentDateGMT - commentDateGMT;
   const diffInMinutes = diffInMilliseconds / (1000 * 60);
   let nextCheck;
-console.log(this.conversation_messages.comments[0].comment_date_gmt);
-  console.log(commentDateGMT);
-  console.log(currentDateGMT);
-
-  console.log(diffInMinutes);
   if ( diffInMinutes > 5 && diffInMinutes < 15 ) {
-    console.log('The comment_date_gmt is more than 5 minutes ago.');
+    // console.log('The comment_date_gmt is more than 5 minutes ago.');
     nextCheck = 60000;
   } else if ( diffInMinutes > 15 ) {
-    console.log('The comment_date_gmt is more than 15 minutes ago.');
+    // console.log('The comment_date_gmt is more than 15 minutes ago.');
     nextCheck = 300000;
   } else {
-    console.log('The comment_date_gmt is less than 5 minutes ago.');
+    // console.log('The comment_date_gmt is less than 5 minutes ago.');
     nextCheck = 5000;
   }
 
@@ -231,7 +226,7 @@ console.log(this.conversation_messages.comments[0].comment_date_gmt);
   getPostComments() {
     API.get_comments('conversations', this.convoid).then((response) =>  {
       this.conversation_messages = response;
-      console.log(this.conversation_messages)
+      // console.log(this.conversation_messages)
     });
   }
 
@@ -248,10 +243,10 @@ console.log(this.conversation_messages.comments[0].comment_date_gmt);
 
   unclaimConvo() {
     const payload = {
-      claimed: false,
-      assigned_to: 0,
+      assigned_to: '',
     };
     API.update_post('conversations', this.convoid, payload).then((response) => {
+      console.log(response);
       this.conversation = response;
       this.claimed = false;
     });
