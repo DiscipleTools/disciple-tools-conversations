@@ -4,9 +4,6 @@ import {classMap} from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { msg } from '@lit/localize';
 import { DtBase } from "@disciple.tools/web-components";
-import ApiService from "@disciple.tools/web-components";
-
-
 
 export class conversationList extends DtBase {
   static get properties() {
@@ -27,7 +24,7 @@ export class conversationList extends DtBase {
   constructor() {
     super();
     this.offset = 0;
-    this.perPage = 6;
+    this.perPage = 10;
   }
 
   static get styles() {
@@ -185,14 +182,13 @@ export class conversationList extends DtBase {
   }
 
   render() {
-    console.log(this.conversations);
     return html`
       <div class="smm-list-header">
         ${!this.showOnlyCurrentConversation ? this._headerRender() : ``}
       </div>
       <ul class="smm-conversation-list">
       ${repeat(
-          this.conversations,
+          this.conversations.posts,
           (conversation) => conversation.ID,
           (conversation, index) => (this.offset <= index && index < (this.offset + this.perPage) ) ? html`
         <li><smm-list-item .conversation=${conversation} userid=${this.userid}></smm-list-item></li>

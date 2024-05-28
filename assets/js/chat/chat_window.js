@@ -12,7 +12,7 @@ export class smmChatWindow extends DtBase {
       .chat-window {
         display: flex;
         flex-direction: column;
-        height: 75dvh;
+        height: 90dvh;
         width: 100%;
       }
       .chat-window__header {
@@ -167,18 +167,27 @@ export class smmChatWindow extends DtBase {
 
   constructor() {
     super();
-    this.conversation_messages = window.commentsSettings.comments.comments;
+    this.apiRoot = window.wpApiShare.root.replace(window.wpApiShare.site_url, '');//Gets the root of the API without the site URL
+    this.nonce = window.wpApiShare.nonce;
   }
 
   connectedCallback() {
     super.connectedCallback();
-
-    this.comment_polling();
+    this.api = new window.WebComponentServices.ApiService(this.nonce, this.apiRoot);
+    this.getPostComments();
 
     document.addEventListener('commentsRetrieved', (e) => {
       this.getPostComments()
     } );
 
+  }
+
+  async _initMessages() {
+    const conversation_messages = await this.api.getComments('conversations', this.convoid);
+
+    this.comment_polling();
+
+    return conversation_messages;
   }
 
   disconnectedCallback() {
@@ -187,6 +196,7 @@ export class smmChatWindow extends DtBase {
   }
 
 comment_polling(){
+  console.log(this.conversation_messages.comments);
   const commentDateGMT = new Date(`${this.conversation_messages.comments[0].comment_date_gmt}Z`);//The Z makes sure the date is in GMT
   const currentDateGMT = new Date();
 
@@ -217,17 +227,17 @@ comment_polling(){
       comment_type: "whatsapp"
     }
 
-    API.post_comment('conversations', this.convoid, messageText, "whatsapp").then((response) => {
+    this.api.createComment('conversations', this.convoid, messageText, "whatsapp").then((response) => {
       this.getPostComments();
       this.shadowRoot.querySelector('textarea').value = '';
     });
   }
 
-  getPostComments() {
-    API.get_comments('conversations', this.convoid).then((response) =>  {
-      this.conversation_messages = response;
-      // console.log(this.conversation_messages)
-    });
+  async getPostComments() {
+    const conversation_messages = await this.api.getComments('conversations', this.convoid);
+
+      this.conversation_messages = conversation_messages;
+      console.log(this.conversation_messages)
   }
 
   claimConvo() {
@@ -235,7 +245,7 @@ comment_polling(){
       assigned_to: this.userid,
     };
 
-    API.update_post('conversations', this.convoid, payload).then((response) => {
+    this.api.updatePost('conversations', this.convoid, payload).then((response) => {
       this.conversation = response;
       this.claimed = true;
     });
@@ -245,7 +255,7 @@ comment_polling(){
     const payload = {
       assigned_to: '',
     };
-    API.update_post('conversations', this.convoid, payload).then((response) => {
+    this.api.updatePost('conversations', this.convoid, payload).then((response) => {
       console.log(response);
       this.conversation = response;
       this.claimed = false;
@@ -287,10 +297,12 @@ comment_polling(){
   render() {
     const messagesTemplates = [];
 
-    for (const i of this.conversation_messages.comments) {
-      messagesTemplates.push(html`<smm-chat-message .message=${i} .incomingMessage=${i.comment_author === this.conversation.name ? true : false} ></smm-chat-message>`);
+    if (this.conversation_messages) {
+      for (const i of this.conversation_messages.comments) {
+        messagesTemplates.push(html`<smm-chat-message .message=${i} .incomingMessage=${i.comment_author === this.conversation.name ? true : false} ></smm-chat-message>`);
+      }
+      messagesTemplates.reverse();
     }
-    messagesTemplates.reverse();
 
     const moreActionsStyles = {
       display: this.moreActionOpen ? 'grid' : 'none',

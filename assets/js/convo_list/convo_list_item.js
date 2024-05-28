@@ -89,13 +89,13 @@ static get styles() {
 
   connectedCallback() {
     super.connectedCallback();
-    this.claimed = this.conversation.claimed;
+    this.claimed = this.conversation.assigned_to !== null;
   }
 
 
 
   _formatDate() {
-    let dateObj = new Date( this.conversation.post_date.formatted );
+    let dateObj = new Date( this.conversation.post_date.timestamp * 1000);
     let dateString = new Intl.DateTimeFormat('default', { month: 'short', day: 'numeric' }).format(dateObj);
 
     return dateString;
@@ -106,7 +106,7 @@ static get styles() {
       <div class="name">${this.conversation.name}</div>
       <div class="mid-line-container">
         <div class="date"><span>${this._formatDate()}</span></div>
-        <div class="platform">${this.conversation.platform}</div>
+        <div class="platform">${this.conversation.type.label}</div>
       </div>
 
       <smm-conversation-modal title="" context="default" ?claimed=${this.claimed} convoid="${this.conversation.ID}" userid=${this.userid} conversation="${JSON.stringify( this.conversation )}" buttonclass="{&quot;alert&quot;:true}" buttonstyle="{&quot;padding&quot;:&quot;40px&quot;}">

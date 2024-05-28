@@ -30,6 +30,14 @@ export class conversationModal extends DtModal {
       `
   }
 
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+  }
+
   render() {
     return html`
     <dialog
@@ -39,6 +47,7 @@ export class conversationModal extends DtModal {
         @keypress=${this._dialogKeypress}
       >
         <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} conversation=${JSON.stringify(this.conversation)}></smm-chat-window>
+
     </dialog>
     <button
       class="button small opener"

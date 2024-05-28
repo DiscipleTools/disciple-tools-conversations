@@ -89,14 +89,14 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
     }
 
     public function dt_magic_url_base_allowed_js( $allowed_js ) {
-        $allowed_js[] = 'web-components';
         $allowed_js[] = 'web-components-services';
+        $allowed_js[] = 'web-components';
         $allowed_js[] = 'conversation_scripts';
         return $allowed_js;
     }
 
     public function dt_magic_url_base_allowed_css( $allowed_css ) {
-        // @todo add or remove js files with this filter
+        $allowed_css[] = 'web-components-css';
         return $allowed_css;
     }
 
@@ -147,8 +147,12 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
      * @see DT_Magic_Url_Base()->header_javascript() for default state
      * @todo remove if not needed
      */
-    public function header_javascript(){
-
+    public function header_javascript(){ ?>
+        <script>
+            window.wpApiShare.apiService = new window.WebComponentServices.ApiService(window.wpApiShare.nonce, window.wpApiShare.root);
+            console.log('apiService', window.wpApiShare.apiService);
+        </script>
+        <?php
     }
 
     /**
