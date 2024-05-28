@@ -85,7 +85,18 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
         add_action( 'dt_blank_body', [ $this, 'body' ] );
         add_filter( 'dt_magic_url_base_allowed_css', [ $this, 'dt_magic_url_base_allowed_css' ], 10, 1 );
         add_filter( 'dt_magic_url_base_allowed_js', [ $this, 'dt_magic_url_base_allowed_js' ], 10, 1 );
+        add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ], 100 );
 
+    }
+
+    public function wp_enqueue_scripts(){
+        wp_enqueue_script( 'web-components-services', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/services.min.js', [], filemtime( plugin_dir_path( __DIR__ ) . 'dist/services.min.js' ), false );
+
+        wp_enqueue_script( 'conversation_scripts', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/conversation_scripts.js', [ 'web-components-services' ], filemtime( plugin_dir_path( __DIR__ ) . 'dist/conversation_scripts.js' ), false );
+
+        wp_register_style( 'conversation_css', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'assets/dist/styles.css', [], filemtime( trailingslashit( plugin_dir_path( __DIR__ ) ) . 'dist/styles.css' ) );
+
+        wp_enqueue_style( 'conversation_css' );
     }
 
     public function dt_magic_url_base_allowed_js( $allowed_js ) {

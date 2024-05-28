@@ -7,6 +7,9 @@ mix.webpackConfig({
   }
 })
 
+mix.copyDirectory('node_modules/@disciple.tools/web-components/dist/services.min.js', 'dist');
+
+
 mix.setPublicPath('dist')
   .js('assets/js/conversation_scripts.js', 'dist/conversation_scripts.js')
   .sourceMaps()
