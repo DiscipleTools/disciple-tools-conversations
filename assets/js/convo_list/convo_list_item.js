@@ -102,8 +102,10 @@ static get styles() {
   }
 
   render() {
+    const name = this.conversation.first_name||this.conversation.last_name ? `${this.conversation.first_name} ${this.conversation.last_name}` : this.conversation.name;
+
     return html`<div class="line-container">
-      <div class="name">${this.conversation.name}</div>
+      <div class="name">${name}</div>
       <div class="mid-line-container">
         <div class="date"><span>${this._formatDate()}</span></div>
         <div class="platform">${this.conversation.type.label}</div>
