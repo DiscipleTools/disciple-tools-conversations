@@ -90,7 +90,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
     }
 
     public function wp_enqueue_scripts(){
-        wp_enqueue_script( 'web-components-services', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/services.min.js', [], filemtime( plugin_dir_path( __DIR__ ) . 'dist/services.min.js' ), false );
+        wp_enqueue_script( 'web-components-services', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/web-components/dist/services.min.js', [], filemtime( plugin_dir_path( __DIR__ ) . 'dist/web-components/dist/services.min.js' ), false );
 
         wp_enqueue_script( 'conversation_scripts', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/conversation_scripts.js', [ 'web-components-services' ], filemtime( plugin_dir_path( __DIR__ ) . 'dist/conversation_scripts.js' ), false );
 

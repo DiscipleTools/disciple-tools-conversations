@@ -7,7 +7,7 @@ mix.webpackConfig({
   }
 })
 
-mix.copyDirectory('node_modules/@disciple.tools/web-components/dist/services.min.js', 'dist');
+mix.copyDirectory('node_modules/@disciple.tools/web-components/', 'dist/web-components');
 
 
 mix.setPublicPath('dist')
