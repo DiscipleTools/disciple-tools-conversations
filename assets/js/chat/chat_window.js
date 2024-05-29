@@ -174,7 +174,7 @@ export class smmChatWindow extends DtBase {
   connectedCallback() {
     super.connectedCallback();
     this.api = new window.WebComponentServices.ApiService(this.nonce, this.apiRoot);
-    this.getPostComments();
+    this._initMessages();
 
     document.addEventListener('commentsRetrieved', (e) => {
       this.getPostComments()
@@ -183,11 +183,10 @@ export class smmChatWindow extends DtBase {
   }
 
   async _initMessages() {
-    const conversation_messages = await this.api.getComments('conversations', this.convoid);
+    await this.getPostComments();
 
     this.comment_polling();
 
-    return conversation_messages;
   }
 
   disconnectedCallback() {
@@ -196,7 +195,7 @@ export class smmChatWindow extends DtBase {
   }
 
 comment_polling(){
-  console.log(this.conversation_messages.comments);
+  console.log('Polling for new comments');
   const commentDateGMT = new Date(`${this.conversation_messages.comments[0].comment_date_gmt}Z`);//The Z makes sure the date is in GMT
   const currentDateGMT = new Date();
 
@@ -256,7 +255,6 @@ comment_polling(){
       assigned_to: '',
     };
     this.api.updatePost('conversations', this.convoid, payload).then((response) => {
-      console.log(response);
       this.conversation = response;
       this.claimed = false;
     });

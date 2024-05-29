@@ -96,6 +96,8 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
 
         wp_register_style( 'conversation_css', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'assets/dist/styles.css', [], filemtime( trailingslashit( plugin_dir_path( __DIR__ ) ) . 'dist/styles.css' ) );
 
+        wp_enqueue_style( 'web-components-css', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'assets/css/styles.css', [], filemtime( trailingslashit( plugin_dir_path( __DIR__ ) ) . 'assets/css/styles.css' ) );
+
         wp_enqueue_style( 'conversation_css' );
     }
 
@@ -161,7 +163,6 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
     public function header_javascript(){ ?>
         <script>
             window.wpApiShare.apiService = new window.WebComponentServices.ApiService(window.wpApiShare.nonce, window.wpApiShare.root);
-            console.log('apiService', window.wpApiShare.apiService);
         </script>
         <?php
     }
