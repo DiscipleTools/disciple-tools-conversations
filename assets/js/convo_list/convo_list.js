@@ -32,6 +32,7 @@ export class conversationList extends DtBase {
       .smm-conversation-list {
           list-style: none;
           margin: 0;
+          margin-bottom: 4rem;
           padding: 0;
           border: 1px solid #E6E6E6;
       }
@@ -176,7 +177,7 @@ export class conversationList extends DtBase {
   _headerRender () {
       return html`
       <span class="smm-list-header-text">
-      <smm-search id="convoListSearch" name="convoListSearch" value="" type="text" requiredmessage="" privatelabel="" onchange="" internals-valid="" aria-invalid="false"></smm-search>
+      <!-- <smm-search id="convoListSearch" name="convoListSearch" value="" type="text" requiredmessage="" privatelabel="" onchange="" internals-valid="" aria-invalid="false"></smm-search> -->
       </span>
       `;
   }
