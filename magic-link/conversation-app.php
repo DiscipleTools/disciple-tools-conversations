@@ -191,20 +191,20 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
         $app_owner = get_user_by( 'ID', $app_owner_id );
         $app_owner_display_name = dt_get_user_display_name( $app_owner_id );
 
-        $myConversations = DT_Posts::list_posts('conversations', [
+        $my_conversations = DT_Posts::list_posts('conversations', [
             'assigned_to' => [ get_current_user_id() ],
             'sort' => '-last_modified',
         ]);
-        if ( is_wp_error( $myConversations ) ) {
-            $myConversations = [];
+        if ( is_wp_error( $my_conversations ) ) {
+            $my_conversations = [];
         }
 
-        $unassignedConversations = DT_Posts::list_posts('conversations', [
-            'assigned_to' => ["-*"],
+        $unassigned_conversations = DT_Posts::list_posts('conversations', [
+            'assigned_to' => [],
             'sort' => '-last_modified',
         ]);
-        if ( is_wp_error( $unassignedConversations ) ) {
-            $unassignedConversations = [];
+        if ( is_wp_error( $unassigned_conversations ) ) {
+            $unassigned_conversations = [];
         }
         // @todo Create an app here that interacts with both the logged in user and the user who owns the app
 
@@ -216,10 +216,10 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
                 </div>
             </div>
             <h1>My Conversations</h1>
-            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $myConversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlyMyConversations></smm-conversation-list>
+            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $my_conversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlymy_conversations></smm-conversation-list>
 
             <h1>Available Conversations</h1>
-            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $unassignedConversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlyMyConversations></smm-conversation-list>
+            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $unassigned_conversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlymy_conversations></smm-conversation-list>
             </div>
         </div>
         <?php
