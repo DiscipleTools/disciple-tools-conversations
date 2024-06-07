@@ -95,7 +95,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
          <link rel="apple-touch-icon" sizes="180x180" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/favicon-16x16.png">
-        <link rel="manifest" href="<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/manifest.json">
+        <link rel="manifest" id="manifest-placeholder" href="">
         <link rel="shortcut icon" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/favicon.ico">
         <meta name="msapplication-TileColor" content="#3f729b">
         <meta name="msapplication-TileImage" content="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/mstile-144x144.png">
@@ -179,10 +179,23 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
     public function header_javascript(){ ?>
         <script>
             window.wpApiShare.apiService = new window.WebComponentServices.ApiService(window.wpApiShare.nonce, window.wpApiShare.root);
+            async function createManifest() {
+                let manifest_url = '<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/manifest.json';
+                let manifest = await fetch(manifest_url)
+                let manifestJson = manifest.json();
+
+                manifestJson.start_url = window.location.href;
+
+                const blob = new Blob([JSON.stringify(manifestJson)], {type: 'application/json'});
+                const manifestURL = URL.createObjectURL(blob);
+                document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+            }
+
+            createManifest();
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/service-worker.js').then(function(registration) {
+                    navigator.serviceWorker.register('<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/js/service-worker.js').then(function(registration) {
                     // Registration was successful
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                     }, function(err) {

@@ -1,7 +1,7 @@
 {
     "name": "Disciple.Tools Conversations",
     "short_name": "Conversations",
-    "start_url": "/conversations_app/conversations/",
+    "start_url": "",
     "icons": [
         {
             "src": "/wp-content/themes/disciple-tools-theme/dt-assets/favicons/android-chrome-192x192.png",
