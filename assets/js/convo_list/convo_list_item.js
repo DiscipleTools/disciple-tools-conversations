@@ -95,7 +95,7 @@ static get styles() {
 
 
   _formatDate() {
-    let dateObj = new Date( this.conversation.post_date.timestamp * 1000);
+    let dateObj = new Date( this.conversation.last_modified.timestamp * 1000);
     let dateString = new Intl.DateTimeFormat('default', { month: 'short', day: 'numeric' }).format(dateObj);
 
     return dateString;

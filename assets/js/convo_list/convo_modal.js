@@ -36,6 +36,20 @@ export class conversationModal extends DtModal {
 
   connectedCallback() {
     super.connectedCallback();
+    this._registerWebSocket();
+  }
+
+  _registerWebSocket() {
+    console.log('Registering websocket... Not Yet Working');
+    //This is where we will register the websocket for the conversation from the Node server
+  }
+
+  _loadChatWindow() {
+    if (this.isOpen) {
+      return html`
+        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} conversation=${JSON.stringify(this.conversation)}></smm-chat-window>
+      `
+    }
   }
 
   render() {
@@ -46,8 +60,7 @@ export class conversationModal extends DtModal {
         @click=${this._dialogClick}
         @keypress=${this._dialogKeypress}
       >
-        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} conversation=${JSON.stringify(this.conversation)}></smm-chat-window>
-
+        ${this._loadChatWindow()}
     </dialog>
     <button
       class="button small opener"
