@@ -182,7 +182,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
             async function createManifest() {
                 let manifest_url = '<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/manifest.json';
                 let manifest = await fetch(manifest_url)
-                let manifestJson = manifest.json();
+                let manifestJson = await manifest.json();
 
                 manifestJson.start_url = window.location.href;
 
