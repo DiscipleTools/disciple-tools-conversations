@@ -82,6 +82,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
         }
 
         // load if valid url
+        add_filter( 'dt_override_header_meta', [ $this, 'header_meta' ] );
         add_action( 'dt_blank_body', [ $this, 'body' ] );
         add_filter( 'dt_magic_url_base_allowed_css', [ $this, 'dt_magic_url_base_allowed_css' ], 10, 1 );
         add_filter( 'dt_magic_url_base_allowed_js', [ $this, 'dt_magic_url_base_allowed_js' ], 10, 1 );
@@ -89,8 +90,23 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
 
     }
 
+    public function header_meta() {
+        ?>
+         <link rel="apple-touch-icon" sizes="180x180" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/favicon-16x16.png">
+        <link rel="manifest" href="<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/manifest.json">
+        <link rel="shortcut icon" href="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/favicon.ico">
+        <meta name="msapplication-TileColor" content="#3f729b">
+        <meta name="msapplication-TileImage" content="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/mstile-144x144.png">
+        <meta name="msapplication-config" content="<?php echo esc_url( get_template_directory_uri() ); ?>/dt-assets/favicons/browserconfig.xml">
+        <meta name="theme-color" content="#3f729b">
+        <?php
+
+    }
+
     public function wp_enqueue_scripts(){
-        wp_enqueue_script( 'web-components-services', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/web-components/dist/services.min.js', [], filemtime( plugin_dir_path( __DIR__ ) . 'dist/web-components/dist/services.min.js' ), false );
+        wp_enqueue_script( 'web-components-services', esc_url( trailingslashit( esc_url( plugin_dir_url( __DIR__ ) ) ) ) . 'dist/web-components/dist/services.min.js', [], filemtime( plugin_dir_path( __DIR__ ) . 'dist/web-components/dist/services.min.js' ), false );
 
         wp_enqueue_script( 'conversation_scripts', trailingslashit( plugin_dir_url( __DIR__ ) ) . 'dist/conversation_scripts.js', [ 'web-components-services' ], filemtime( plugin_dir_path( __DIR__ ) . 'dist/conversation_scripts.js' ), false );
 
@@ -121,7 +137,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
      * - description:       Magic link type description.
      * - settings_display:  Boolean flag which determines if magic link type is to be listed within frontend user profile settings.
      *
-     * @param $apps_list
+     * @param array $apps_list
      *
      * @return mixed
      */
@@ -163,6 +179,18 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
     public function header_javascript(){ ?>
         <script>
             window.wpApiShare.apiService = new window.WebComponentServices.ApiService(window.wpApiShare.nonce, window.wpApiShare.root);
+
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/service-worker.js').then(function(registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function(err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
         </script>
         <?php
     }
@@ -194,6 +222,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
         $my_conversations = DT_Posts::list_posts('conversations', [
             'assigned_to' => [ get_current_user_id() ],
             'sort' => '-last_modified',
+            'fields_to_return' => [ 'ID', 'post_title', 'post_type', 'post_date', 'last_modified', 'first_name', 'last_name', 'assigned_to', 'status', 'label', 'name', 'permalink', 'type' ]
         ]);
         if ( is_wp_error( $my_conversations ) ) {
             $my_conversations = [];
@@ -259,6 +288,13 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
         );
     }
 
+    /**
+     * Update the record.
+     *
+     * @param WP_REST_Request $request The REST request object.
+     *
+     * @return bool True if the record is updated successfully, false otherwise.
+     */
     public function update_record( WP_REST_Request $request ) {
         $params = $request->get_params();
         $params = dt_recursive_sanitize_array( $params );
