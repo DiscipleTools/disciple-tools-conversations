@@ -188,7 +188,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
 
                 const blob = new Blob([JSON.stringify(manifestJson)], {type: 'application/json'});
                 const manifestURL = URL.createObjectURL(blob);
-                document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+                document.getElementById('manifest-placeholder').setAttribute('src', manifestURL);
 
                 if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
