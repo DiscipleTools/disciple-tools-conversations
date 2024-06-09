@@ -162,6 +162,9 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
     public function header_style(){
         ?>
         <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="DT Conversations">
+
         <style>
             body {
                 background-color: white;
