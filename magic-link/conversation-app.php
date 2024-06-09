@@ -189,11 +189,8 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
                 const blob = new Blob([JSON.stringify(manifestJson)], {type: 'application/json'});
                 const manifestURL = URL.createObjectURL(blob);
                 document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
-            }
 
-            createManifest();
-
-            if ('serviceWorker' in navigator) {
+                if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
                     navigator.serviceWorker.register('<?php echo esc_url( trailingslashit( plugin_dir_url( __DIR__ ) ) ); ?>assets/js/service-worker.js').then(function(registration) {
                     // Registration was successful
@@ -204,6 +201,9 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
                     });
                 });
             }
+            }
+
+            createManifest();
         </script>
         <?php
     }
