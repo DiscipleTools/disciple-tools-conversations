@@ -86,6 +86,14 @@ class Disciple_Tools_Conversations {
     }
 
     private function __construct() {
+        $is_rest = dt_is_rest();
+        /**
+         * @todo Decide if you want to use the REST API example
+         * To remove: delete this following line and remove the folder named /rest-api
+         */
+        if ( $is_rest && strpos( dt_get_url_path(), 'disciple_tools_conversations' ) !== false ) {
+            require_once( 'rest-api/rest-api.php' ); // adds starter rest api class
+        }
 
         require_once( 'post-type/loader.php' ); // add starter post type extension to Disciple.Tools system
 
