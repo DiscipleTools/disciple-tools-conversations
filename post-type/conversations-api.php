@@ -13,6 +13,14 @@ class DT_Conversations_API {
                 'label' => 'Phone',
                 'convert_to_lowercase' => true,
             ],
+            'facebook' => [
+                'label' => 'Facebook',
+                'convert_to_lowercase' => false,
+            ],
+            'instagram' => [
+                'label' => 'Instagram',
+                'convert_to_lowercase' => false,
+            ],
         ];
         return apply_filters( 'dt_communication_handles', $handles );
     }

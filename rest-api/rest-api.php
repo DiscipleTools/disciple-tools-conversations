@@ -34,16 +34,24 @@ class Disciple_Tools_Conversation_Endpoints
 
 
     public function incoming_conversation( WP_REST_Request $request ) {
+        $response = [];
         // Check if the request method is POST
         if ( $request->get_method() === 'POST' ) {
             $params = $request->get_params();
             $params = dt_recursive_sanitize_array( $params );
             $headers = $request->get_headers();
 
-            dt_write_log($params);
+            //TODO: Add Timzeone and Locale to the conversation record and any other data Meta will give us about the user.
             $conversations_record = DT_Conversations_API::create_or_update_conversation_record(
                 $params['senderId'],
-                [ 'type' => 'text' ],
+                [
+                    'first_name' => $params['first_name'],
+                    'last_name' => $params['last_name'],
+                    'sources' => ["values" => [
+                        [ "value" => $params['platform'] ],
+                    ]],
+                    'type' => $params['platform'],
+                ],
             );
             if ( !is_wp_error( $conversations_record ) ){
                 #DT_Posts::add_post_comment( 'conversations', $conversations_record['ID'], $phone_number_location, 'twilio', [], false, true );
@@ -51,6 +59,8 @@ class Disciple_Tools_Conversation_Endpoints
                     'user_id'        => 0,
                     'comment_author' => $params['senderId'],
                 ], false, false );
+
+                $response['success'] = 'Conversation created';
             }
 
         } else {
