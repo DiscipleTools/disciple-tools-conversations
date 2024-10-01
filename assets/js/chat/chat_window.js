@@ -159,6 +159,7 @@ export class smmChatWindow extends DtBase {
       claimed: { type: Boolean },
       convoid: { type: Number },
       userid: { type: Number },
+      platform: { type: String },
       conversation: { type: Object },
       conversation_messages: { type: Array },
       moreActionOpen: { type: Boolean },
@@ -223,10 +224,10 @@ comment_polling(){
 
     const payload = {
       comment: messageText,
-      comment_type: "whatsapp"
+      comment_type: this.platform
     }
 
-    this.api.createComment('conversations', this.convoid, messageText, "whatsapp").then((response) => {
+    this.api.createComment('conversations', this.convoid, messageText, this.platform).then((response) => {
       this.getPostComments();
       this.shadowRoot.querySelector('textarea').value = '';
     });
