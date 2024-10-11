@@ -288,7 +288,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             ?>
             <div class="section-subheader">
                 <div class="smm-conversation-list">
-                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> platform=<?php echo esc_attr( wp_json_encode( $post['sources'][0] ) ) ?> conversation='<?php echo esc_attr( wp_json_encode( $post ) ) ?>' conversation_messages='<?php  echo esc_attr( wp_json_encode( $post_comments ) )?>' ></smm-chat-window>
+                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> platform=<?php echo esc_attr( $post['sources'][0] ) ?> conversation='<?php echo esc_attr( wp_json_encode( $post ) ) ?>' conversation_messages='<?php  echo esc_attr( wp_json_encode( $post_comments ) )?>' ></smm-chat-window>
                 </div>
             </div>
 
@@ -368,6 +368,19 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
 
     //filter when a comment is created
     public function dt_comment_created( $post_type, $post_id, $comment_id, $type ){
+        if ( $post_type === $this->post_type ){
+            // get the post and comment
+            $post = DT_Posts::get_post( $post_type, $post_id );
+            //using the standard WP comment insteaed of getting all DT comments with DT_Posts::get_post_comments and filtering for the correct one. If we need to get the comment meta we can use get_comment_meta( $comment_id, $key, $single )
+            $comment = get_comment($comment_id);
+            //the conversation UID is currently the name of the conversation but that should be changed TODO: change the conversation UID to store in a field other than name so it doesn't get changed.
+            $conversationUID = $post['name'];
+
+            // set a POST request to the API to send the comment to the conversation. The format should be {"recipientID": 8551049621583272 "platform": "facebook","message": "This is a Response2"}
+            $response = DT_Conversations_API::send_message( $conversationUID, $type,$comment->comment_content);
+
+
+        }
     }
 
     // filter at the start of post creation
