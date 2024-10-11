@@ -142,6 +142,14 @@ export default class ApiService {
     );
   }
 
+  async checkFieldValueExists(fieldType, value){
+      return this.makeRequestOnPosts(
+        'POST',
+        `${fieldType}/check_field_value_exists`,
+          value
+      );
+  }
+
   /**
    * Get values for a multi_select field
    * @param {string} postType
@@ -410,8 +418,20 @@ export default class ApiService {
    * @param {string} query
    * @returns {Promise<any>}
    */
-  async searchUsers(query) {
-    return this.makeRequest('GET', `users/get_users?s=${query}`);
+  async searchUsers(query='',postType) {
+    const params = new URLSearchParams({
+      s: query
+    });
+    return this.makeRequest('GET', `users/get_users?${params}&post_type=${postType}`);
+  }
+
+  // Duplicate Users
+  async checkDuplicateUsers(postType,postId){
+    return this.makeRequestOnPosts('GET', `${postType}/${postId}/duplicates`);
+  }
+
+  async getContactInfo(postType,postId){
+    return this.makeRequestOnPosts('GET', `${postType}/${postId}/`);
   }
 
   /**

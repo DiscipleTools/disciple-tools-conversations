@@ -32,9 +32,9 @@ export class DtConnection extends DtTags {
         }
 
         li button svg {
-          width: 20px;
+          width: 1.5em;
           height: auto;
-          margin-bottom: -4px;
+          margin-bottom: -.25em;
         }
         li button svg use {
           fill: var(--dt-connection-icon-fill, var(--primary-color));
@@ -138,7 +138,7 @@ export class DtConnection extends DtTags {
               .toLocaleLowerCase()
               .includes(this.query.toLocaleLowerCase()))
       );
-    } else if (this.open) {
+    } else if (this.open || this.canUpdate) {
       // Only run this filtering if the list is open.
       // This prevents it from running on initial load before a `load` event is attached.
       this.loading = true;
@@ -146,7 +146,7 @@ export class DtConnection extends DtTags {
 
       // need to fetch data via API request
       const self = this;
-      const event = new CustomEvent('load', {
+      const event = new CustomEvent('dt:get-data', {
         bubbles: true,
         detail: {
           field: this.name,
@@ -163,6 +163,7 @@ export class DtConnection extends DtTags {
           onError: error => {
             console.warn(error);
             self.loading = false;
+            this.canUpdate = false;
           },
         },
       });
@@ -215,6 +216,7 @@ export class DtConnection extends DtTags {
           data-label="${opt.label}"
           @click="${this._clickOption}"
           @touchstart="${this._touchStart}"
+          @blur="${this._inputFocusOut}"
           @touchmove="${this._touchMove}"
           @touchend="${this._touchEnd}"
           tabindex="-1"

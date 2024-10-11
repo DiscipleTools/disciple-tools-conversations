@@ -2,8 +2,10 @@
   Form Components
 */
 export { DtButton } from './src/components/form/dt-button/dt-button.js';
+export { DtDropdown } from './src/components/form/dt-dropdown/dt-dropdown.js'
 export { DtChurchHealthCircle } from './src/components/form/dt-church-health-circle/dt-church-health-circle.js';
 export { DtConnection } from './src/components/form/dt-connection/dt-connection.js';
+export { DtUsersConnection } from './src/components/form/dt-users-connection/dt-users-connection.js';
 export { DtCopyText } from './src/components/form/dt-copy-text/dt-copy-text.js';
 export { DtDate } from './src/components/form/dt-date/dt-date.js';
 export { DtLabel } from './src/components/form/dt-label/dt-label.js';
@@ -18,6 +20,7 @@ export { DtText } from './src/components/form/dt-text/dt-text.js';
 export { DtTextArea } from './src/components/form/dt-textarea/dt-textarea.js';
 export { DtToggle } from './src/components/form/dt-toggle/dt-toggle.js';
 export { DtCommChannel } from './src/components/form/dt-communication-channel/dt-comm-channel.js';
+export { DtMultiSelectButtonGroup } from './src/components/form/dt-multiselect-button-group/dt-multiselect-button-group.js';
 
 export { default as DtFormBase } from './src/components/form/dt-form-base.js';
 

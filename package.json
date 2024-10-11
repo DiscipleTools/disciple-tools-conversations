@@ -21,7 +21,7 @@
     "homepage": "https://github.com/thecodezone/disciple-tools-autolink#readme",
     "dependencies": {
         "-": "^0.0.1",
-        "@disciple.tools/web-components": "0.6.3",
+        "@disciple.tools/web-components": "0.6.8",
         "@lit/localize": "^0.11.4",
         "element-internals-polyfill": "^1.1.15",
         "g": "^2.0.1",
