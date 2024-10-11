@@ -103,11 +103,10 @@ class Disciple_Tools_Conversations {
 
         $this->i18n();
 
-//        if ( is_admin() ) {
-//            require_once( 'admin/admin-menu-and-tabs.php' ); // adds starter admin page and section for plugin
-// adds links to the plugin description area in the plugin admin list.
-//            add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
-//        }
+       if ( is_admin() ) {
+           require_once( 'admin/admin-menu-and-tabs.php' ); // adds starter admin page and section for plugin adds links to the plugin description area in the plugin admin list.
+           add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
+       }
 
 /**
          * @todo Decide if you want to create a magic link

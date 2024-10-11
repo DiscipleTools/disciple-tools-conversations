@@ -375,8 +375,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             $comment = get_comment($comment_id);
             //the conversation UID is currently the name of the conversation but that should be changed TODO: change the conversation UID to store in a field other than name so it doesn't get changed.
             $conversationUID = $post['name'];
-
-            // set a POST request to the API to send the comment to the conversation. The format should be {"recipientID": 8551049621583272 "platform": "facebook","message": "This is a Response2"}
+            //send the message to the social mediator server
             $response = DT_Conversations_API::send_message( $conversationUID, $type,$comment->comment_content);
 
 

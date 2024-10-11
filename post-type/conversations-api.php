@@ -141,11 +141,8 @@ class DT_Conversations_API {
 
     public static function send_message($recipientID, $platform, $message) {
         // send a POST request to the API
-        //TODO: change the URL to get the API URL from the settings
+        $social_mediator_url = get_option('disciple_tools_conversations_social_mediator_url');
 
-        // $social_mediator_url = get_option('social_mediator_url');
-        // $social_mediator_url = 'https://social-mediator.onrender.com/';
-        $social_mediator_url = 'http://localhost:3030/';
         $send_message_url = $social_mediator_url . 'api/response';
         $response = wp_remote_post($send_message_url, array(
             'body' => json_encode(array(
@@ -156,6 +153,12 @@ class DT_Conversations_API {
             'headers' => array('Content-Type' => 'application/json'),
         ));
 
-        dt_write_log($response);
+        // if the request was successful, return the response
+        if (!is_wp_error($response)) {
+            return $response;
+        } else {
+            return json_decode(wp_remote_retrieve_body($response));
+        }
+
     }
 }
