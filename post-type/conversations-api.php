@@ -139,4 +139,23 @@ class DT_Conversations_API {
         return $phone;
     }
 
+    public static function send_message($recipientID, $platform, $message) {
+        // send a POST request to the API
+        //TODO: change the URL to get the API URL from the settings
+
+        // $social_mediator_url = get_option('social_mediator_url');
+        // $social_mediator_url = 'https://social-mediator.onrender.com/';
+        $social_mediator_url = 'http://localhost:3030/';
+        $send_message_url = $social_mediator_url . 'api/response';
+        $response = wp_remote_post($send_message_url, array(
+            'body' => json_encode(array(
+                'recipientID' => $recipientID,
+                'platform' => $platform,
+                'message' => $message
+            )),
+            'headers' => array('Content-Type' => 'application/json'),
+        ));
+
+        dt_write_log($response);
+    }
 }
