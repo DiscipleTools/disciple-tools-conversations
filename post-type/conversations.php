@@ -378,6 +378,13 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             //send the message to the social mediator server
             $response = DT_Conversations_API::send_message( $conversationUID, $type,$comment->comment_content);
 
+            //if the response is an error then log it if success then add the comment meta to the comment
+            if ( is_wp_error( $response ) ){
+                dt_write_log( 'Error sending message to social mediator server: ' . $response->get_error_message() );
+            } else {
+                //Adds a comment meta to the comment to show that the message was sent to the social mediator server
+                add_comment_meta( $comment_id, 'disciple_tools_conversations_message_sent', true, true );
+            }
 
         }
     }
