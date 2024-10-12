@@ -371,8 +371,15 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         if ( $post_type === $this->post_type ){
             // get the post and comment
             $post = DT_Posts::get_post( $post_type, $post_id );
+            dt_write_log('dt_comment_created');
             //using the standard WP comment insteaed of getting all DT comments with DT_Posts::get_post_comments and filtering for the correct one. If we need to get the comment meta we can use get_comment_meta( $comment_id, $key, $single )
             $comment = get_comment($comment_id);
+            $comment_meta = get_comment_meta( $comment_id );
+
+            //Check if the comment is an inbound message if so don't send it to the social mediator server
+            if ( isset( $comment_meta['disciple_tools_conversations_inbound_message'] ) ){
+                return;
+            }
             //the conversation UID is currently the name of the conversation but that should be changed TODO: change the conversation UID to store in a field other than name so it doesn't get changed.
             $conversationUID = $post['name'];
             //send the message to the social mediator server

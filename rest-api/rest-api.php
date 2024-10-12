@@ -19,7 +19,7 @@ class Disciple_Tools_Conversation_Endpoints
      */
     //See https://github.com/DiscipleTools/disciple-tools-theme/wiki/Site-to-Site-Link for outside of wordpress authentication
     public function add_api_routes() {
-        $namespace = 'dt-public/disciple_tools_conversations/v1';
+        $namespace = '/disciple_tools_conversations/v1';
 
         register_rest_route(
             $namespace, '/incoming_conversation', [
@@ -58,6 +58,7 @@ class Disciple_Tools_Conversation_Endpoints
                 DT_Posts::add_post_comment( 'conversations', $conversations_record['ID'], $params['messageText'], $params['platform'], [
                     'user_id'        => 0,
                     'comment_author' => $params['senderId'],
+                    'comment_meta'        => ['disciple_tools_conversations_inbound_message' => true],
                 ], false, false );
 
                 $response['success'] = 'Conversation created';
