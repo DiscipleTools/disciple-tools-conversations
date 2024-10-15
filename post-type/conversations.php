@@ -223,6 +223,13 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 'tile'        => 'details',
                 'show_in_table' => 30,
             ];
+            $fields['PageID'] = [
+                'name'        => __( 'Social Media Page ID', 'disciple-tools-conversations' ),
+                'description' => __( 'Social Media Page ID', 'disciple-tools-conversations' ),
+                'type'        => 'text',
+                'tile'        => 'details',
+                'show_in_table' => 40,
+            ];
         }
 
         return $fields;
@@ -285,10 +292,11 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             $fields = DT_Posts::get_post_field_settings( $post_type );
             $post = DT_Posts::get_post( $this->post_type, get_the_ID() );
             $post_comments = DT_Posts::get_post_comments( $post_type, $post['ID'] );
+            $social_mediator_url = get_option('disciple_tools_conversations_social_mediator_url');
             ?>
             <div class="section-subheader">
                 <div class="smm-conversation-list">
-                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> platform=<?php echo esc_attr( $post['sources'][0] ) ?> conversation='<?php echo esc_attr( wp_json_encode( $post ) ) ?>' conversation_messages='<?php  echo esc_attr( wp_json_encode( $post_comments ) )?>' ></smm-chat-window>
+                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> platform=<?php echo esc_attr( $post['sources'][0] ) ?> conversation='<?php echo esc_attr( wp_json_encode( $post ) ) ?>' conversation_messages='<?php  echo esc_attr( wp_json_encode( $post_comments ) )?>' pageid='<?php echo esc_attr( $post['PageID'] ); ?>' socketurl="<?php echo esc_attr( $social_mediator_url )?>"></smm-chat-window>
                 </div>
             </div>
 
@@ -371,7 +379,6 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         if ( $post_type === $this->post_type ){
             // get the post and comment
             $post = DT_Posts::get_post( $post_type, $post_id );
-            dt_write_log('dt_comment_created');
             //using the standard WP comment insteaed of getting all DT comments with DT_Posts::get_post_comments and filtering for the correct one. If we need to get the comment meta we can use get_comment_meta( $comment_id, $key, $single )
             $comment = get_comment($comment_id);
             $comment_meta = get_comment_meta( $comment_id );

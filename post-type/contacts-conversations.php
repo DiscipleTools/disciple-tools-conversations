@@ -84,6 +84,8 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                 } else if ( $key === 'contact_facebook' ){
                     $conv_title = $com_value['value'];
                     $conv_type = 'facebook';
+                } else if ( $key === 'PageID') {
+                    $conv_pageid = $com_value['value'];
                 }
                 //this conversation is already created
                 if ( in_array( $com_value['value'], DT_Conversations_API::array_key_values( $contact['conversations'] ?? [], 'post_title' ), true ) ){
@@ -95,7 +97,8 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                 $conversation_fields = [
                     'first_name' => $names['first_name'],
                     'last_name' => $names['last_name'],
-                    'type' => $conv_type
+                    'type' => $conv_type,
+                    'PageID' => $conv_pageid,
                 ];
                 $create_or_update = DT_Conversations_API::create_or_update_conversation_record( $conv_title, $conversation_fields, $contact_id );
             }

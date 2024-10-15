@@ -12,6 +12,7 @@ export class conversationModal extends DtModal {
       claimed: { type: Boolean },
       convoid: { type: Number },
       userid: { type: Number },
+      pageid: { type: Text },
     };
   }
 
@@ -47,7 +48,7 @@ export class conversationModal extends DtModal {
   _loadChatWindow() {
     if (this.isOpen) {
       return html`
-        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} conversation=${JSON.stringify(this.conversation)}></smm-chat-window>
+        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} conversation=${JSON.stringify(this.conversation)} pageid=${this.pageid}></smm-chat-window>
       `
     }
   }

@@ -2,6 +2,7 @@ import { html, css } from 'lit';
 import { msg } from '@lit/localize';
 import { styleMap } from 'lit/directives/style-map.js';
 import { DtBase } from "@disciple.tools/web-components";
+import io from 'socket.io-client';
 
 
 export class smmChatWindow extends DtBase {
@@ -160,9 +161,11 @@ export class smmChatWindow extends DtBase {
       convoid: { type: Number },
       userid: { type: Number },
       platform: { type: String },
+      pageid: {type: String},
       conversation: { type: Object },
       conversation_messages: { type: Array },
       moreActionOpen: { type: Boolean },
+      socketurl: { type: String },
     };
   }
 
@@ -185,14 +188,32 @@ export class smmChatWindow extends DtBase {
 
   async _initMessages() {
     await this.getPostComments();
-
-    this.comment_polling();
-
+    // this.comment_polling();
+    this.socket_subscribe();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('commentsRetrieved', this.getPostComments() );
+  }
+
+  socket_subscribe() {
+    console.log('Subscribing to the conversation updates');
+    const socket = io(this.socketurl, { transports: ['websocket'] });
+
+    // Assuming you have recipientPageId and senderId available
+    const pageid = this.pageid;
+    const senderId = this.conversation.name;
+    const room = `${pageid}-${senderId}`;
+
+    socket.emit('join', room);
+
+    socket.on('message', () => {
+      console.log('New message:');
+      this.getPostComments();
+      // Handle the incoming message
+    });
+
   }
 
 comment_polling(){
