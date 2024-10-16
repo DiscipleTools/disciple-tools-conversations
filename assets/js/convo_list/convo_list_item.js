@@ -63,11 +63,14 @@ static get styles() {
       }
 
       .notication {
-        background: var(--smm-list-notification-background, red);
+        background: var(--smm-list-notification-background, var(--alert-color, red));
         color: var(--smm-list-notification-color, white);
         border-radius: 50%;
-        padding: .25em;
-        font-size: .75em;
+        font-size: clamp(.75em, 1em, 1.15em);
+        display: inline-flex;
+        min-width: 1em;
+        padding: 0em 0.25em;
+        justify-content: center;
       }
 
       .date {
@@ -106,7 +109,6 @@ static get styles() {
     super.connectedCallback();
     this.claimed = this.conversation.assigned_to
     if(this.claimed) {
-      console.log(this.claimed);
       //subscribe only to the conversation that is claimed
       this.socket_subscribe();
     }
@@ -149,7 +151,6 @@ static get styles() {
 
   render() {
     const name = this.conversation.first_name||this.conversation.last_name ? `${this.conversation.first_name} ${this.conversation.last_name}` : this.conversation.name;
-    console.log(this.socketurl);
     return html`
       <div class="line-container">
       <div class="name">${name}
