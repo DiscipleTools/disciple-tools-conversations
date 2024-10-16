@@ -2,6 +2,8 @@ import { css, html, LitElement } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { DtBase } from "@disciple.tools/web-components";
+import io from 'socket.io-client';
+
 
 export class conversationListItem extends DtBase {
   static get properties() {
@@ -10,10 +12,15 @@ export class conversationListItem extends DtBase {
       conversation: { type: Array },
       claimed: { type: Boolean },
       userid: { type: Number },
+      socketurl: { type: String },
+      socket: { type: Object },
+      notification_count: { type: Number },
     };
   }
   constructor() {
     super();
+    //TODO: Set this number to the number of unread messages
+    this.notification_count = 0;
   }
 static get styles() {
     return css`
@@ -55,6 +62,14 @@ static get styles() {
         font-weight: bold;
       }
 
+      .notication {
+        background: var(--smm-list-notification-background, red);
+        color: var(--smm-list-notification-color, white);
+        border-radius: 50%;
+        padding: .25em;
+        font-size: .75em;
+      }
+
       .date {
         font-size: .75em;
         align-content: center;
@@ -89,10 +104,39 @@ static get styles() {
 
   connectedCallback() {
     super.connectedCallback();
-    this.claimed = this.conversation.assigned_to !== null;
+    this.claimed = this.conversation.assigned_to
+    if(this.claimed) {
+      console.log(this.claimed);
+      //subscribe only to the conversation that is claimed
+      this.socket_subscribe();
+    }
+
   }
 
+  socket_subscribe() {
+    console.log('Subscribing to the conversation updates');
+    const socket = io(this.socketurl, { transports: ['websocket'] });
 
+    // Assuming you have recipientPageId and senderId available
+    const pageid = this.conversation.PageID;
+    const senderId = this.conversation.name;
+    const room = `${pageid}-${senderId}`;
+    socket.emit('join', room);
+    this.socket = socket;
+    socket.on('message', () => {
+      this.notification_count++;
+      //emit a custom event called commentsUpdated to update the comments
+      const event = new CustomEvent('commentsUpdated', {
+        detail: {
+          conversation: this.conversation,
+        },
+        bubbles: true,
+        composed: true
+      });
+      this.dispatchEvent(event);
+    });
+
+  }
 
   _formatDate() {
     let dateObj = new Date( this.conversation.last_modified.timestamp * 1000);
@@ -101,23 +145,29 @@ static get styles() {
     return dateString;
   }
 
+
+
   render() {
     const name = this.conversation.first_name||this.conversation.last_name ? `${this.conversation.first_name} ${this.conversation.last_name}` : this.conversation.name;
-
-    return html`<div class="line-container">
-      <div class="name">${name}</div>
+    console.log(this.socketurl);
+    return html`
+      <div class="line-container">
+      <div class="name">${name}
+        ${this.notification_count != 0 ? html`<span class="notication count">${this.notification_count}</span>` : ''}
+      </div>
       <div class="mid-line-container">
         <div class="date"><span>${this._formatDate()}</span></div>
         <div class="platform">${this.conversation.type.label}</div>
       </div>
 
-      <smm-conversation-modal title="" context="default" ?claimed=${this.claimed} convoid="${this.conversation.ID}" userid=${this.userid} conversation="${JSON.stringify( this.conversation )}" buttonclass="{&quot;alert&quot;:true}" buttonstyle="{&quot;padding&quot;:&quot;40px&quot;}">
+      <smm-conversation-modal title="" context="default" ?claimed=${this.claimed} convoid="${this.conversation.ID}" userid=${this.userid} conversation="${JSON.stringify(this.conversation)}" buttonclass="{&quot;alert&quot;:true}" buttonstyle="{&quot;padding&quot;:&quot;40px&quot;}" socketurl=${this.socketurl} socket=${this.socket}>
         <span slot="content">Test</span>
         <span slot="openButton">
-          View Conversation
+        View Conversation
         </span>
-    </smm-conversation-modal>
-    </div>`;
+      </smm-conversation-modal>
+      </div>
+    `;
   }
 
 }

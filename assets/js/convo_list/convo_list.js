@@ -17,7 +17,8 @@ export class conversationList extends DtBase {
       showOnlyClaimed: { type: Boolean},
       showOnlyMyConversations: { type: Boolean},
       showOnlyContactConversations: { type: Number},
-      showOnlyCurrentConversation: {type: Boolean}
+      showOnlyCurrentConversation: {type: Boolean},
+      socketurl: { type: String},
     };
   }
 
@@ -108,7 +109,6 @@ export class conversationList extends DtBase {
     }
 
     const response = await window.makeRequestOnPosts( 'GET', `disciple-tools-conversations`, query)
-    console.log(response);
     this.conversations = response.posts;
   }
 
@@ -192,7 +192,7 @@ export class conversationList extends DtBase {
           this.conversations.posts,
           (conversation) => conversation.ID,
           (conversation, index) => (this.offset <= index && index < (this.offset + this.perPage) ) ? html`
-        <li><smm-list-item .conversation=${conversation} userid=${this.userid}></smm-list-item></li>
+        <li><smm-list-item .conversation=${conversation} userid=${this.userid} pageid=${conversation.PageID} socketurl=${this.socketurl}></smm-list-item></li>
         ` : ``
         )}
       </ul>

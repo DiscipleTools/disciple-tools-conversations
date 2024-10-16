@@ -239,7 +239,6 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
         $my_conversations = DT_Posts::list_posts('conversations', [
             'assigned_to' => [ get_current_user_id() ],
             'sort' => '-last_modified',
-            'fields_to_return' => [ 'ID', 'post_title', 'post_type', 'post_date', 'last_modified', 'first_name', 'last_name', 'assigned_to', 'status', 'label', 'name', 'permalink', 'type' ]
         ]);
         if ( is_wp_error( $my_conversations ) ) {
             $my_conversations = [];
@@ -249,6 +248,9 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
             'assigned_to' => [],
             'sort' => '-last_modified',
         ]);
+
+        $social_mediator_url = get_option('disciple_tools_conversations_social_mediator_url');
+
         if ( is_wp_error( $unassigned_conversations ) ) {
             $unassigned_conversations = [];
         }
@@ -262,10 +264,10 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
                 </div>
             </div>
             <h1>My Conversations</h1>
-            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $my_conversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlymy_conversations></smm-conversation-list>
+            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $my_conversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> socketurl="<?php echo esc_attr( $social_mediator_url )?>" showOnlymy_conversations></smm-conversation-list>
 
             <h1>Available Conversations</h1>
-            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $unassigned_conversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?> showOnlymy_conversations></smm-conversation-list>
+            <smm-conversation-list conversations="<?php echo esc_attr( wp_json_encode( $unassigned_conversations ) ) ?>" userid=<?php echo esc_attr( get_current_user_id() ) ?>  socketurl="<?php echo esc_attr( $social_mediator_url )?>" showOnlymy_conversations></smm-conversation-list>
             </div>
         </div>
         <?php

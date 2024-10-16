@@ -184,12 +184,17 @@ export class smmChatWindow extends DtBase {
       this.getPostComments()
     } );
 
+    document.addEventListener('commentsUpdated', (e) => {
+      this.getPostComments();
+    } );
   }
 
   async _initMessages() {
     await this.getPostComments();
     // this.comment_polling();
-    this.socket_subscribe();
+    if (this.socketurl) {
+      this.socket_subscribe();
+    }
   }
 
   disconnectedCallback() {
@@ -217,7 +222,6 @@ export class smmChatWindow extends DtBase {
   }
 
 comment_polling(){
-  console.log('Polling for new comments');
   const commentDateGMT = new Date(`${this.conversation_messages.comments[0].comment_date_gmt}Z`);//The Z makes sure the date is in GMT
   const currentDateGMT = new Date();
 
@@ -258,7 +262,6 @@ comment_polling(){
     const conversation_messages = await this.api.getComments('conversations', this.convoid);
 
       this.conversation_messages = conversation_messages;
-      console.log(this.conversation_messages)
   }
 
   claimConvo() {

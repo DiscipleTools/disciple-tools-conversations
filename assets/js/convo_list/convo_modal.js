@@ -13,6 +13,8 @@ export class conversationModal extends DtModal {
       convoid: { type: Number },
       userid: { type: Number },
       pageid: { type: Text },
+      socketurl: { type: String },
+      socket: { type: Object },
     };
   }
 
@@ -37,18 +39,12 @@ export class conversationModal extends DtModal {
 
   connectedCallback() {
     super.connectedCallback();
-    this._registerWebSocket();
-  }
-
-  _registerWebSocket() {
-    console.log('Registering websocket... Not Yet Working');
-    //This is where we will register the websocket for the conversation from the Node server
   }
 
   _loadChatWindow() {
     if (this.isOpen) {
       return html`
-        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} conversation=${JSON.stringify(this.conversation)} pageid=${this.pageid}></smm-chat-window>
+        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} platform=${this.conversation.platform} conversation=${JSON.stringify(this.conversation)} pageid=${this.conversation.pageid} socket=${this.socket}></smm-chat-window>
       `
     }
   }
