@@ -44,7 +44,7 @@ export class conversationModal extends DtModal {
   _loadChatWindow() {
     if (this.isOpen) {
       return html`
-        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} platform=${this.conversation.platform} conversation=${JSON.stringify(this.conversation)} pageid=${this.conversation.pageid} socket=${this.socket}></smm-chat-window>
+        <smm-chat-window ?claimed=${this.claimed} convoid=${this.convoid} userid=${this.userid} platform=${this.conversation.sources[0]} conversation=${JSON.stringify(this.conversation)} pageid=${this.conversation.pageid} socket=${this.socket}></smm-chat-window>
       `
     }
   }
