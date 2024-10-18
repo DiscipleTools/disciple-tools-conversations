@@ -58,6 +58,26 @@ static get styles() {
         justify-content: space-around;
       }
 
+      .start-line-container {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+      }
+
+      .profile-pic {
+        width: 3em;
+        height: 3em;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .profile-pic img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
       .name {
         font-weight: bold;
       }
@@ -153,7 +173,13 @@ static get styles() {
     const name = this.conversation.first_name||this.conversation.last_name ? `${this.conversation.first_name} ${this.conversation.last_name}` : this.conversation.name;
     return html`
       <div class="line-container">
-      <div class="name">${name}
+      <div class="start-line-container">
+        <span class="profile-pic">
+          ${this.conversation.profile_pic ? html`
+            <img src="${this.conversation.profile_pic}" alt="Profile Picture" />
+          ` : ''}
+        </span>
+        <span class="name">${name}</span>
         ${this.notification_count != 0 ? html`<span class="notication count">${this.notification_count}</span>` : ''}
       </div>
       <div class="mid-line-container">

@@ -332,10 +332,12 @@ comment_polling(){
     };
     const name = this.conversation.first_name||this.conversation.last_name ? `${this.conversation.first_name} ${this.conversation.last_name}` : this.conversation.name;
 
+    const profile_pic = this.conversation.profile_pic ? this.conversation.profile_pic : 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
+
     return html`
       <div class="chat-window">
         <div class="chat-window__header">
-          <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" height="250px" width="250px" alt="John Smith" class="avatar"/>
+          <img src="${profile_pic}" height="250px" width="250px" alt="John Smith" class="avatar"/>
           <h1 class="name">${name}</h1>
           <span class="channel">${this.conversation.type.label}</span>
           <!-- <span class="age">25 years old</span> -->

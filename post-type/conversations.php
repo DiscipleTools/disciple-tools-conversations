@@ -233,8 +233,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             $fields['profile_pic'] = [
                 'name'        => __( 'Profile Picture', 'disciple-tools-conversations' ),
                 'description' => __( 'Profile Picture', 'disciple-tools-conversations' ),
-                'type'        => 'image',
-                'tile'        => 'details',
+                'type'        => 'text',
                 'show_in_table' => 45,
             ];
         }
