@@ -139,25 +139,25 @@ class DT_Conversations_API {
         return $phone;
     }
 
-    public static function send_message($recipientID, $platform, $message) {
+    public static function send_message( $recipientid, $platform, $message ) {
         // send a POST request to the API
-        $social_mediator_url = get_option('disciple_tools_conversations_social_mediator_url');
+        $social_mediator_url = get_option( 'disciple_tools_conversations_social_mediator_url' );
 
         $send_message_url = $social_mediator_url . 'api/response';
         $response = wp_remote_post($send_message_url, array(
             'body' => json_encode(array(
-                'recipientID' => $recipientID,
+                'recipientid' => $recipientid,
                 'platform' => $platform,
                 'message' => $message
             )),
-            'headers' => array('Content-Type' => 'application/json'),
+            'headers' => array( 'Content-Type' => 'application/json' ),
         ));
 
         // if the request was successful, return the response
-        if (!is_wp_error($response)) {
+        if ( !is_wp_error( $response ) ) {
             return $response;
         } else {
-            return json_decode(wp_remote_retrieve_body($response));
+            return json_decode( wp_remote_retrieve_body( $response ) );
         }
 
     }

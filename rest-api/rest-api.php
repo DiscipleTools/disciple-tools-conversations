@@ -47,10 +47,9 @@ class Disciple_Tools_Conversation_Endpoints
                 [
                     'first_name' => $params['first_name'],
                     'last_name' => $params['last_name'],
-                    'sources' => ["values" => [
-                        [ "value" => $params['platform'] ],
-                    ]],
+                    'sources' => [ 'values' => [ [ 'value' => $params['platform'] ] ] ],
                     'type' => $params['platform'],
+                    'profile_pic' => $params['profile_pic'],
                 ],
             );
             if ( !is_wp_error( $conversations_record ) ){
@@ -58,12 +57,11 @@ class Disciple_Tools_Conversation_Endpoints
                 DT_Posts::add_post_comment( 'conversations', $conversations_record['ID'], $params['messageText'], $params['platform'], [
                     'user_id'        => 0,
                     'comment_author' => $params['senderId'],
-                    'comment_meta'        => ['disciple_tools_conversations_inbound_message' => true],
+                    'comment_meta'        => [ 'disciple_tools_conversations_inbound_message' => true ],
                 ], false, false );
 
                 $response['success'] = 'Conversation created';
             }
-
         } else {
             // Handle other request methods if necessary
             $response['error'] = 'Invalid request';

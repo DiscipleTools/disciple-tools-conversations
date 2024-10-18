@@ -249,7 +249,7 @@ class Disciple_Tools_Conversations_Magic_Login_User_App extends DT_Magic_Url_Bas
             'sort' => '-last_modified',
         ]);
 
-        $social_mediator_url = get_option('disciple_tools_conversations_social_mediator_url');
+        $social_mediator_url = get_option( 'disciple_tools_conversations_social_mediator_url' );
 
         if ( is_wp_error( $unassigned_conversations ) ) {
             $unassigned_conversations = [];

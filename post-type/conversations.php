@@ -176,7 +176,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 'show_in_table' => 10,
             ];
 
-           $fields['assigned_to'] = [
+            $fields['assigned_to'] = [
                'name'        => __( 'Assigned To', 'disciple-tools-conversations' ),
                'description' => __( 'Select the main person who is responsible for reporting on this record.', 'disciple-tools-conversations' ),
                'type'        => 'user_select',
@@ -184,7 +184,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                'tile' => 'status',
                'icon' => get_template_directory_uri() . '/dt-assets/images/assigned-to.svg',
                'show_in_table' => 16,
-           ];
+            ];
 
             $fields['contacts'] = [
                 'name' => __( 'Contacts', 'disciple-tools-conversations' ),
@@ -229,6 +229,13 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 'type'        => 'text',
                 'tile'        => 'details',
                 'show_in_table' => 40,
+            ];
+            $fields['profile_pic'] = [
+                'name'        => __( 'Profile Picture', 'disciple-tools-conversations' ),
+                'description' => __( 'Profile Picture', 'disciple-tools-conversations' ),
+                'type'        => 'image',
+                'tile'        => 'details',
+                'show_in_table' => 45,
             ];
         }
 
@@ -292,11 +299,11 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             $fields = DT_Posts::get_post_field_settings( $post_type );
             $post = DT_Posts::get_post( $this->post_type, get_the_ID() );
             $post_comments = DT_Posts::get_post_comments( $post_type, $post['ID'] );
-            $social_mediator_url = get_option('disciple_tools_conversations_social_mediator_url');
+            $social_mediator_url = get_option( 'disciple_tools_conversations_social_mediator_url' );
             ?>
             <div class="section-subheader">
                 <div class="smm-conversation-list">
-                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> platform=<?php echo esc_attr( $post['sources'][0] ) ?> conversation='<?php echo esc_attr( wp_json_encode( $post ) ) ?>' conversation_messages='<?php  echo esc_attr( wp_json_encode( $post_comments ) )?>' pageid='<?php echo esc_attr( $post['PageID'] ); ?>' socketurl="<?php echo esc_attr( $social_mediator_url )?>"></smm-chat-window>
+                    <smm-chat-window convoid=<?php echo esc_attr( wp_json_encode( get_the_ID() ) ) ?> userid=<?php echo esc_attr( get_current_user_id() ) ?> platform=<?php echo esc_attr( $post['sources'][0] ) ?> conversation='<?php echo esc_attr( wp_json_encode( $post ) ) ?>' conversation_messages='<?php echo esc_attr( wp_json_encode( $post_comments ) )?>' pageid='<?php echo esc_attr( $post['PageID'] ); ?>' socketurl="<?php echo esc_attr( $social_mediator_url )?>"></smm-chat-window>
                 </div>
             </div>
 
@@ -380,7 +387,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             // get the post and comment
             $post = DT_Posts::get_post( $post_type, $post_id );
             //using the standard WP comment insteaed of getting all DT comments with DT_Posts::get_post_comments and filtering for the correct one. If we need to get the comment meta we can use get_comment_meta( $comment_id, $key, $single )
-            $comment = get_comment($comment_id);
+            $comment = get_comment( $comment_id );
             $comment_meta = get_comment_meta( $comment_id );
 
             //Check if the comment is an inbound message if so don't send it to the social mediator server
@@ -388,9 +395,9 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 return;
             }
             //the conversation UID is currently the name of the conversation but that should be changed TODO: change the conversation UID to store in a field other than name so it doesn't get changed.
-            $conversationUID = $post['name'];
+            $conversation_uid = $post['name'];
             //send the message to the social mediator server
-            $response = DT_Conversations_API::send_message( $conversationUID, $type,$comment->comment_content);
+            $response = DT_Conversations_API::send_message( $conversation_uid, $type, $comment->comment_content );
 
             //if the response is an error then log it if success then add the comment meta to the comment
             if ( is_wp_error( $response ) ){
@@ -399,7 +406,6 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 //Adds a comment meta to the comment to show that the message was sent to the social mediator server
                 add_comment_meta( $comment_id, 'disciple_tools_conversations_message_sent', true, true );
             }
-
         }
     }
 
