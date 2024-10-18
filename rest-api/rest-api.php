@@ -50,6 +50,7 @@ class Disciple_Tools_Conversation_Endpoints
                     'sources' => [ 'values' => [ [ 'value' => $params['platform'] ] ] ],
                     'type' => $params['platform'],
                     'profile_pic' => $params['profile_pic'],
+                    'PageID' => $params['PageID'],
                 ],
             );
             if ( !is_wp_error( $conversations_record ) ){
