@@ -104,6 +104,9 @@ class DT_Conversations_API {
             if ( $contact_id ){
                 $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
             }
+            if ( isset( $fields['pageID'] ) ) {
+                $fields['PageID'] = $fields['pageID'];
+            }
             $conversation_record = DT_Posts::create_post( 'conversations', $fields, true, false );
         }
         if ( is_wp_error( $conversation_record ) ){
