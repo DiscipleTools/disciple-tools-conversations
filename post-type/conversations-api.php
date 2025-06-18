@@ -63,7 +63,7 @@ class DT_Conversations_API {
         return $field_options;
     }
 
-    public static function create_or_update_conversation_record( string $handle, array $fields, int $contact_id = null ){
+    public static function create_or_update_conversation_record( string $handle, array $fields, ?int $contact_id = null ){
         $conversation_record = self::find_record_by_handle( $handle, true );
         if ( !empty( $conversation_record ) ){
             //if ( is_user_logged_in() && !DT_Posts::can_view( 'conversation', $conversation_record['ID'] ) ){
