@@ -427,11 +427,12 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                     </div>
                                     
                                     <div class="conversation-actions">
-                                        <a href="<?php echo esc_attr($conversation['permalink']); ?>" 
-                                           class="button small view"
-                                           title="View conversation">
+                                        <button class="button small view view-conversation-btn" 
+                                                data-conversation-id="<?php echo esc_attr($conversation['ID']); ?>"
+                                                data-conversation-name="<?php echo esc_attr($conversation['name']); ?>"
+                                                title="View conversation history">
                                             <i class="mdi mdi-eye-outline"></i>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -439,6 +440,148 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     </div>
                 </div>
             </div>
+
+            <!-- Conversation History Modal -->
+            <div class="reveal" id="conversation-history-modal" data-reveal data-reset-on-close>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-right: 40px;">
+                    <h3 id="conversation-modal-title" style="margin: 0;">Conversation History</h3>
+                    <a id="open-conversation-record-btn" href="#" class="button small" target="_blank" style="margin: 0;">
+                        <i class="mdi mdi-open-in-new"></i> Open Record
+                    </a>
+                </div>
+                <div id="conversation-modal-content" style="max-height: 500px; overflow-y: auto;">
+                    <div class="loading-spinner" style="text-align: center; padding: 40px;">
+                        <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 0 auto;"></div>
+                        <p style="margin-top: 10px;">Loading conversation history...</p>
+                    </div>
+                </div>
+                <button class="close-button" data-close aria-label="Close modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                .conversation-comment {
+                    padding: 12px;
+                    margin-bottom: 8px;
+                    border-radius: 12px;
+                    max-width: 80%;
+                    position: relative;
+                }
+                .conversation-comment.user-message {
+                    background-color: #e3f2fd;
+                    border: 1px solid #1976d2;
+                    margin-left: auto;
+                    margin-right: 0;
+                }
+                .conversation-comment.system-message {
+                    background-color: #f5f5f5;
+                    border: 1px solid #9e9e9e;
+                    margin-left: 0;
+                    margin-right: auto;
+                }
+                .conversation-comment.other-message {
+                    background-color: #e8f5e8;
+                    border: 1px solid #4caf50;
+                    margin-left: 0;
+                    margin-right: auto;
+                }
+                .conversation-comment-meta {
+                    font-size: 0.8rem;
+                    color: #666;
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                }
+                .conversation-comment-content {
+                    line-height: 1.5;
+                    word-wrap: break-word;
+                }
+                .no-comments {
+                    text-align: center;
+                    color: #888;
+                    padding: 40px;
+                    font-style: italic;
+                }
+            </style>
+
+            <script>
+                jQuery(document).ready(function($) {
+                    $('.view-conversation-btn').on('click', function() {
+                        const conversationId = $(this).data('conversation-id');
+                        const conversationName = $(this).data('conversation-name');
+                        
+                        $('#conversation-modal-title').text('Conversation History: ' + conversationName);
+                        
+                        // Set the URL for the "Open Record" button
+                        const conversationUrl = window.wpApiShare.site_url + '/conversations/' + conversationId;
+                        $('#open-conversation-record-btn').attr('href', conversationUrl);
+                        $('#conversation-modal-content').html(`
+                            <div class="loading-spinner" style="text-align: center; padding: 40px;">
+                                <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 0 auto;"></div>
+                                <p style="margin-top: 10px;">Loading conversation history...</p>
+                            </div>
+                        `);
+                        
+                        $('#conversation-history-modal').foundation('open');
+                        
+                        // Load conversation comments via AJAX
+                        window.API.get_comments('conversations', conversationId).then(function(response) {
+                            if (response.comments && response.comments.length > 0) {
+                                let commentsHtml = '';
+                                response.comments.reverse(); // Show oldest first
+                                
+                                // Get the first message author to represent the "other user"
+                                const firstMessageAuthor = response.comments.find(comment => 
+                                    comment.comment_author && 
+                                    comment.comment_author !== 'System' && 
+                                    comment.comment_author !== ''
+                                )?.comment_author;
+                                
+                                response.comments.forEach(function(comment) {
+                                    const date = new Date(comment.comment_date).toLocaleString();
+                                    const author = comment.comment_author || 'System';
+                                    
+                                    // Determine message type based on author
+                                    let messageClass = 'system-message';
+                                    if (author === 'System' || author === '' || !author) {
+                                        messageClass = 'system-message';
+                                    } else if (author === firstMessageAuthor) {
+                                        messageClass = 'other-message'; // First author = other user (green, left)
+                                    } else {
+                                        messageClass = 'user-message'; // Any other author = us (blue, right)
+                                    }
+                                    
+                                    commentsHtml += `
+                                        <div class="conversation-comment ${messageClass}">
+                                            <div class="conversation-comment-meta">
+                                                <strong>${author}</strong> - ${date}
+                                            </div>
+                                            <div class="conversation-comment-content">
+                                                ${comment.comment_content}
+                                            </div>
+                                        </div>
+                                    `;
+                                });
+                                
+                                $('#conversation-modal-content').html(commentsHtml);
+                            } else {
+                                $('#conversation-modal-content').html(
+                                    '<div class="no-comments">No messages found in this conversation.</div>'
+                                );
+                            }
+                        }).catch(function(error) {
+                            console.error('Error loading conversation comments:', error);
+                            $('#conversation-modal-content').html(
+                                '<div class="no-comments">Failed to load conversation history. Please try again.</div>'
+                            );
+                        });
+                    });
+                });
+            </script>
         <?php }
     }
 
