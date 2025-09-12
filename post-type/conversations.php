@@ -249,6 +249,14 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 'key' => 'sms',
                 'label' => __( 'SMS Conversation', 'disciple-tools-facebook' )
             ];
+            $sections[] = [
+                'key' => 'web_chat',
+                'label' => __( 'Web Chat Conversation', 'disciple-tools-facebook' )
+            ];
+            $sections[] = [
+                'key' => 'instagram',
+                'label' => __( 'Instagram Conversation', 'disciple-tools-facebook' )
+            ];
         }
         return $sections;
     }

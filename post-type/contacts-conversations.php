@@ -26,10 +26,11 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
 
         //setup tiles and fields
         add_filter( 'dt_custom_fields_settings', [ $this, 'dt_custom_fields_settings' ], 200, 2 );
-        add_action( 'dt_record_after_details_section', [ $this, 'dt_add_section' ], 30, 2 );
+        // add_action( 'dt_record_after_details_section', [ $this, 'dt_record_after_details_section' ], 30, 2 );
+        add_action( 'dt_record_after_details_section', [ $this, 'dt_record_after_details_section_conversations' ], 30, 2 );
 
-        //comments
-        add_filter( 'dt_filter_post_comments', [ $this, 'dt_filter_post_comments' ], 10, 3 );
+        //include conversation comments in the contact comments
+        // add_filter( 'dt_filter_post_comments', [ $this, 'dt_filter_post_comments' ], 10, 3 );
 
         //hooks
         add_filter( 'dt_post_create_fields', [ $this, 'convert_emails_to_lowercase' ], 10, 2 );
@@ -146,14 +147,14 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
         return $response_body;
     }
 
-    public function dt_add_section( $post_type, $post ) {
+    public function dt_record_after_details_section( $post_type, $post ) {
         if ( $post_type === 'contacts' ){
             $conversations = DT_Posts::list_posts( 'conversations', [ 'contacts' => [ $post['ID'] ] ] );
             $cats = [
                 'email' => [ 'label' => 'Email', 'icon' => 'email.svg' ],
                 'phone' => [ 'label' => 'Phone', 'icon' => 'phone.svg' ],
                 'facebook' => [ 'label' => 'Facebook', 'icon' => 'facebook.svg' ],
-            ]
+            ];
             ?>
             <style>
                 i.dt-font-icon {
@@ -177,8 +178,9 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     justify-content: flex-end;
                     grid-gap: 5px;
                 }
-
             </style>
+
+            <!-- Original Conversations Tile with Add/Delete functionality -->
             <div class="cell small-12">
                 <div class="bordered-box" id="conversations-tile">
                     <div style="display: flex">
@@ -209,7 +211,6 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                       </ul>
                     </div>
 
-
                     <!-- Add modal -->
                     <div class="reveal" id="add-conversation-modal" data-reveal>
                         <h3>Add an Address or Number</h3>
@@ -237,7 +238,6 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                           <img class="dt-icon" src="<?php echo esc_html( get_template_directory_uri() . '/dt-assets/images/' . $cat['icon'] ) ?>"/>
                                           <?php echo esc_html( $conversation['name'] ); ?>
                                           <?php echo esc_html( $conversation['status']['key'] ?? '' ); ?>
-
                                         </div>
                                         <div class="row-end">
                                           <a href="<?php echo esc_html( $conversation['permalink'] ); ?>"
@@ -257,7 +257,6 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                               <i class="dt-font-icon mdi mdi-delete-outline"></i>
                                           </button>
                                         </div>
-
                                     </div>
                                 <?php endif;
                             endforeach; ?>
@@ -288,6 +287,158 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                 });
               });
             </script>
+        <?php }
+    }
+    
+    public function dt_record_after_details_section_conversations( $post_type, $post ) {
+        if ( $post_type === 'contacts' ){
+            $conversations = DT_Posts::list_posts( 'conversations', [ 'contacts' => [ $post['ID'] ] ] );
+            $field_settings = DT_Posts::get_post_field_settings( 'conversations' );
+            ?>
+            <style>
+                .conversation-row {
+                    display: flex;
+                    align-items: flex-start;
+                    padding: 12px;
+                    border-bottom: 1px solid #e6e6e6;
+                    transition: background-color 0.2s;
+                }
+                .conversation-row:hover {
+                    background-color: #f8f9fa;
+                }
+                .conversation-content {
+                    flex: 1;
+                    min-width: 0;
+                }
+                .conversation-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 4px;
+                    gap: 12px;
+                }
+                .conversation-title {
+                    font-weight: 600;
+                    color: #333;
+                    margin: 0;
+                    word-break: break-all;
+                    flex: 1;
+                }
+                .conversation-last-comment {
+                    color: #666;
+                    font-size: 0.9rem;
+                    margin: 4px 0;
+                    line-height: 1.4;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+                .conversation-meta {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex-shrink: 0;
+                }
+                .conversation-date {
+                    color: #888;
+                    font-size: 0.8rem;
+                }
+                .conversation-count {
+                    color: #666;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                }
+                .conversation-type {
+                    background: #e3f2fd;
+                    color: #1976d2;
+                    padding: 2px 6px;
+                    border-radius: 12px;
+                    font-size: 0.75rem;
+                    font-weight: 500;
+                }
+                .conversation-actions {
+                    display: flex;
+                    gap: 4px;
+                    margin-left: 12px;
+                }
+                .no-conversations {
+                    text-align: center;
+                    color: #888;
+                    padding: 24px;
+                    font-style: italic;
+                }
+            </style>
+
+            <div class="cell small-12">
+                <div class="bordered-box" id="recent-conversations-tile">
+                    <h3 class="section-header">
+                        Conversations
+                    </h3>
+                    <div class="section-body">
+                        <?php if (empty($conversations['posts'])): ?>
+                            <div class="no-conversations">
+                                No conversations found for this contact.
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($conversations['posts'] as $conversation): 
+                                $conversation_type = $conversation['type']['key'] ?? 'chatwoot';
+                                $type_label = $field_settings['type']['default'][$conversation_type]['label'] ?? ucfirst($conversation_type);
+                                
+                                // Get comments for this conversation
+                                $all_comments = DT_Posts::get_post_comments( 'conversations', $conversation['ID'], false, 'all' );
+                                $message_count = !empty($all_comments['comments']) ? count($all_comments['comments']) : 0;
+                                $last_comment = null;
+                                $last_comment_date = null;
+                                
+                                if (!empty($all_comments['comments'])) {
+                                    $last_comment = $all_comments['comments'][0];
+                                    $last_comment_date = $last_comment['comment_date'];
+                                }
+                                ?>
+                                <div class="conversation-row">
+                                    <div class="conversation-content">
+                                        <div class="conversation-header">
+                                            <div class="conversation-meta">
+                                                <span class="conversation-type">
+                                                    <?php echo esc_html($type_label); ?>
+                                                </span>
+                                                <span class="conversation-count">
+                                                    <?php echo esc_html($message_count . ' ' . _n('message', 'messages', $message_count, 'disciple_tools')); ?>
+                                                </span>
+                                                <?php if ($last_comment_date): ?>
+                                                    <span class="conversation-date">
+                                                        <?php 
+                                                        echo dt_format_date( $last_comment_date, 'long' );
+                                                        ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="conversation-date">No messages</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        
+                                        <?php if ($last_comment): ?>
+                                            <div class="conversation-last-comment">
+                                                <?php echo esc_html(wp_trim_words(strip_tags($last_comment['comment_content']), 15)); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    
+                                    <div class="conversation-actions">
+                                        <a href="<?php echo esc_attr($conversation['permalink']); ?>" 
+                                           class="button small view"
+                                           title="View conversation">
+                                            <i class="mdi mdi-eye-outline"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
         <?php }
     }
 
