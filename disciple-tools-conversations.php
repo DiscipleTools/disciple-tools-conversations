@@ -5,7 +5,7 @@
  * Description: Track conversations that happen with your contacts.
  * Text Domain: disciple-tools-conversations
  * Domain Path: /languages
- * Version:  0.1
+ * Version:  0.1.1
  * Author URI: https://github.com/DiscipleTools
  * GitHub Plugin URI: https://github.com/DiscipleTools/disciple-tools-conversations
  * Requires at least: 4.7.0
