@@ -289,7 +289,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
             </script>
         <?php }
     }
-    
+
     public function dt_record_after_details_section_conversations( $post_type, $post ) {
         if ( $post_type === 'contacts' ){
             $conversations = DT_Posts::list_posts( 'conversations', [ 'contacts' => [ $post['ID'] ] ] );
@@ -377,22 +377,22 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                         Conversations
                     </h3>
                     <div class="section-body">
-                        <?php if (empty($conversations['posts'])): ?>
+                        <?php if ( empty( $conversations['posts'] ) ): ?>
                             <div class="no-conversations">
                                 No conversations found for this contact.
                             </div>
-                        <?php else: ?>
-                            <?php foreach ($conversations['posts'] as $conversation): 
+                        <?php else : ?>
+                            <?php foreach ( $conversations['posts'] as $conversation ):
                                 $conversation_type = $conversation['type']['key'] ?? 'chatwoot';
-                                $type_label = $field_settings['type']['default'][$conversation_type]['label'] ?? ucfirst($conversation_type);
-                                
+                                $type_label = $field_settings['type']['default'][$conversation_type]['label'] ?? ucfirst( $conversation_type );
+
                                 // Get comments for this conversation
                                 $all_comments = DT_Posts::get_post_comments( 'conversations', $conversation['ID'], false, 'all' );
-                                $message_count = !empty($all_comments['comments']) ? count($all_comments['comments']) : 0;
+                                $message_count = !empty( $all_comments['comments'] ) ? count( $all_comments['comments'] ) : 0;
                                 $last_comment = null;
                                 $last_comment_date = null;
-                                
-                                if (!empty($all_comments['comments'])) {
+
+                                if ( !empty( $all_comments['comments'] ) ) {
                                     $last_comment = $all_comments['comments'][0];
                                     $last_comment_date = $last_comment['comment_date'];
                                 }
@@ -402,34 +402,34 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                         <div class="conversation-header">
                                             <div class="conversation-meta">
                                                 <span class="conversation-type">
-                                                    <?php echo esc_html($type_label); ?>
+                                                    <?php echo esc_html( $type_label ); ?>
                                                 </span>
                                                 <span class="conversation-count">
-                                                    <?php echo esc_html($message_count . ' ' . _n('message', 'messages', $message_count, 'disciple_tools')); ?>
+                                                    <?php echo esc_html( $message_count . ' ' . _n( 'message', 'messages', $message_count, 'disciple_tools' ) ); ?>
                                                 </span>
-                                                <?php if ($last_comment_date): ?>
+                                                <?php if ( $last_comment_date ): ?>
                                                     <span class="conversation-date">
-                                                        <?php 
-                                                        echo dt_format_date( $last_comment_date, 'long' );
+                                                        <?php
+                                                        echo esc_html( dt_format_date( $last_comment_date, 'long' ) );
                                                         ?>
                                                     </span>
-                                                <?php else: ?>
+                                                <?php else : ?>
                                                     <span class="conversation-date">No messages</span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
-                                        
-                                        <?php if ($last_comment): ?>
+
+                                        <?php if ( $last_comment ): ?>
                                             <div class="conversation-last-comment">
-                                                <?php echo esc_html(wp_trim_words(strip_tags($last_comment['comment_content']), 15)); ?>
+                                                <?php echo esc_html( wp_trim_words( strip_tags( $last_comment['comment_content'] ), 15 ) ); ?>
                                             </div>
                                         <?php endif; ?>
                                     </div>
-                                    
+
                                     <div class="conversation-actions">
-                                        <button class="button small view view-conversation-btn" 
-                                                data-conversation-id="<?php echo esc_attr($conversation['ID']); ?>"
-                                                data-conversation-name="<?php echo esc_attr($conversation['name']); ?>"
+                                        <button class="button small view view-conversation-btn"
+                                                data-conversation-id="<?php echo esc_attr( $conversation['ID'] ); ?>"
+                                                data-conversation-name="<?php echo esc_attr( $conversation['name'] ); ?>"
                                                 title="View conversation history">
                                             <i class="mdi mdi-eye-outline"></i>
                                         </button>
@@ -513,9 +513,9 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     $('.view-conversation-btn').on('click', function() {
                         const conversationId = $(this).data('conversation-id');
                         const conversationName = $(this).data('conversation-name');
-                        
+
                         $('#conversation-modal-title').text('Conversation History: ' + conversationName);
-                        
+
                         // Set the URL for the "Open Record" button
                         const conversationUrl = window.wpApiShare.site_url + '/conversations/' + conversationId;
                         $('#open-conversation-record-btn').attr('href', conversationUrl);
@@ -525,26 +525,26 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                 <p style="margin-top: 10px;">Loading conversation history...</p>
                             </div>
                         `);
-                        
+
                         $('#conversation-history-modal').foundation('open');
-                        
+
                         // Load conversation comments via AJAX
                         window.API.get_comments('conversations', conversationId).then(function(response) {
                             if (response.comments && response.comments.length > 0) {
                                 let commentsHtml = '';
                                 response.comments.reverse(); // Show oldest first
-                                
+
                                 // Get the first message author to represent the "other user"
-                                const firstMessageAuthor = response.comments.find(comment => 
-                                    comment.comment_author && 
-                                    comment.comment_author !== 'System' && 
+                                const firstMessageAuthor = response.comments.find(comment =>
+                                    comment.comment_author &&
+                                    comment.comment_author !== 'System' &&
                                     comment.comment_author !== ''
                                 )?.comment_author;
-                                
+
                                 response.comments.forEach(function(comment) {
                                     const date = new Date(comment.comment_date).toLocaleString();
                                     const author = comment.comment_author || 'System';
-                                    
+
                                     // Determine message type based on author
                                     let messageClass = 'system-message';
                                     if (author === 'System' || author === '' || !author) {
@@ -554,7 +554,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                     } else {
                                         messageClass = 'user-message'; // Any other author = us (blue, right)
                                     }
-                                    
+
                                     commentsHtml += `
                                         <div class="conversation-comment ${messageClass}">
                                             <div class="conversation-comment-meta">
@@ -566,7 +566,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                         </div>
                                     `;
                                 });
-                                
+
                                 $('#conversation-modal-content').html(commentsHtml);
                             } else {
                                 $('#conversation-modal-content').html(
