@@ -324,16 +324,37 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     word-break: break-all;
                     flex: 1;
                 }
+                .conversation-ai-summary {
+                    color: #444;
+                    font-size: 0.9rem;
+                    margin: 4px 0;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
+                .conversation-ai-summary .mdi {
+                    color: #7c4dff;
+                    font-size: 1rem;
+                    flex-shrink: 0;
+                }
                 .conversation-last-comment {
                     color: #666;
                     font-size: 0.9rem;
                     margin: 4px 0;
-                    line-height: 1.4;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    line-clamp: 2;
-                    -webkit-box-orient: vertical;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 6px;
+                }
+                .conversation-last-comment .mdi {
+                    color: #607d8b;
+                    flex-shrink: 0;
+                }
+                .conversation-line-text {
+                    flex: 1;
+                    min-width: 0;
                     overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
                 .conversation-meta {
                     display: flex;
@@ -385,6 +406,10 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                             <?php foreach ( $conversations['posts'] as $conversation ):
                                 $conversation_type = $conversation['type']['key'] ?? 'chatwoot';
                                 $type_label = $field_settings['type']['default'][$conversation_type]['label'] ?? ucfirst( $conversation_type );
+                                $ai_summary = '';
+                                if ( isset( $conversation['ai_summary'] ) ) {
+                                    $ai_summary = trim( wp_strip_all_tags( (string) $conversation['ai_summary'] ) );
+                                }
 
                                 // Get comments for this conversation
                                 $all_comments = DT_Posts::get_post_comments( 'conversations', $conversation['ID'], false, 'all' );
@@ -419,9 +444,17 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                             </div>
                                         </div>
 
+                                        <?php if ( ! empty( $ai_summary ) ): ?>
+                                            <div class="conversation-ai-summary">
+                                                <i class="mdi mdi-auto-fix"></i>
+                                                <span class="conversation-line-text"><?php echo esc_html( $ai_summary ); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <?php if ( $last_comment ): ?>
                                             <div class="conversation-last-comment">
-                                                <?php echo esc_html( wp_trim_words( strip_tags( $last_comment['comment_content'] ), 15 ) ); ?>
+                                                <i class="mdi mdi-message-text-outline"></i>
+                                                <span class="conversation-line-text"><?php echo esc_html( wp_trim_words( strip_tags( $last_comment['comment_content'] ), 15 ) ); ?></span>
                                             </div>
                                         <?php endif; ?>
                                     </div>
@@ -586,5 +619,3 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
     }
 
 }
-
-
