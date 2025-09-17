@@ -447,7 +447,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                         <?php if ( ! empty( $ai_summary ) ): ?>
                                             <div class="conversation-ai-summary">
                                                 <i class="mdi mdi-auto-fix"></i>
-                                                <span class="conversation-line-text"><?php echo esc_html( $ai_summary ); ?></span>
+                                                <span class="conversation-line-text" title="<?php echo esc_attr( $ai_summary ); ?>"><?php echo esc_html( $ai_summary ); ?></span>
                                             </div>
                                         <?php endif; ?>
 
@@ -463,6 +463,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                         <button class="button small view view-conversation-btn"
                                                 data-conversation-id="<?php echo esc_attr( $conversation['ID'] ); ?>"
                                                 data-conversation-name="<?php echo esc_attr( $conversation['name'] ); ?>"
+                                                data-conversation-summary="<?php echo esc_attr( $ai_summary ); ?>"
                                                 title="View conversation history">
                                             <i class="mdi mdi-eye-outline"></i>
                                         </button>
@@ -481,6 +482,10 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     <a id="open-conversation-record-btn" href="#" class="button small" target="_blank" style="margin: 0;">
                         <i class="mdi mdi-open-in-new"></i> Open Record
                     </a>
+                </div>
+                <div id="conversation-modal-summary" class="conversation-modal-summary" style="display: none;">
+                    <i class="mdi mdi-auto-fix"></i>
+                    <span id="conversation-modal-summary-text"></span>
                 </div>
                 <div id="conversation-modal-content" style="max-height: 500px; overflow-y: auto;">
                     <div class="loading-spinner" style="text-align: center; padding: 40px;">
@@ -539,6 +544,24 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     padding: 40px;
                     font-style: italic;
                 }
+                .conversation-modal-summary {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: #f8fafc;
+                    border: 1px solid #d0e2f2;
+                    border-radius: 8px;
+                    padding: 10px 12px;
+                    margin-bottom: 16px;
+                    color: #1e3a8a;
+                }
+                .conversation-modal-summary .mdi {
+                    font-size: 18px;
+                    color: #2563eb;
+                }
+                #conversation-modal-summary-text {
+                    line-height: 1.4;
+                }
             </style>
 
             <script>
@@ -546,12 +569,25 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     $('.view-conversation-btn').on('click', function() {
                         const conversationId = $(this).data('conversation-id');
                         const conversationName = $(this).data('conversation-name');
+                        const conversationSummary = $(this).data('conversation-summary');
 
                         $('#conversation-modal-title').text('Conversation History: ' + conversationName);
 
                         // Set the URL for the "Open Record" button
                         const conversationUrl = window.wpApiShare.site_url + '/conversations/' + conversationId;
                         $('#open-conversation-record-btn').attr('href', conversationUrl);
+
+                        const summaryContainer = $('#conversation-modal-summary');
+                        const summaryTextEl = $('#conversation-modal-summary-text');
+                        if (conversationSummary) {
+                            summaryTextEl.text(conversationSummary);
+                            summaryTextEl.attr('title', conversationSummary);
+                            summaryContainer.show();
+                        } else {
+                            summaryTextEl.text('');
+                            summaryTextEl.removeAttr('title');
+                            summaryContainer.hide();
+                        }
                         $('#conversation-modal-content').html(`
                             <div class="loading-spinner" style="text-align: center; padding: 40px;">
                                 <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 0 auto;"></div>
