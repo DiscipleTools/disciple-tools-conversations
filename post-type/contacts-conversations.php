@@ -624,13 +624,17 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                         messageClass = 'user-message'; // Any other author = us (blue, right)
                                     }
 
+                                    const commentContent = comment.comment_content
+                                        ? window.SHAREDFUNCTIONS.escapeHTML(comment.comment_content).replace(/(?:\r\n|\r|\n)/g, '<br>')
+                                        : '';
+
                                     commentsHtml += `
                                         <div class="conversation-comment ${messageClass}">
                                             <div class="conversation-comment-meta">
                                                 <strong>${author}</strong> - ${date}
                                             </div>
-                                            <div class="conversation-comment-content">
-                                                ${comment.comment_content}
+                                            <div class="conversation-comment-content" dir="auto">
+                                                ${commentContent}
                                             </div>
                                         </div>
                                     `;
