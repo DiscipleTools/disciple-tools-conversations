@@ -13,6 +13,14 @@ class DT_Conversations_API {
                 'label' => 'Phone',
                 'convert_to_lowercase' => true,
             ],
+            'facebook' => [
+                'label' => 'Facebook',
+                'convert_to_lowercase' => false,
+            ],
+            'instagram' => [
+                'label' => 'Instagram',
+                'convert_to_lowercase' => false,
+            ],
         ];
         return apply_filters( 'dt_communication_handles', $handles );
     }
@@ -96,6 +104,9 @@ class DT_Conversations_API {
             if ( $contact_id ){
                 $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
             }
+            if ( isset( $fields['pageID'] ) ) {
+                $fields['PageID'] = $fields['pageID'];
+            }
             $conversation_record = DT_Posts::create_post( 'conversations', $fields, true, false );
         }
         if ( is_wp_error( $conversation_record ) ){
@@ -131,4 +142,26 @@ class DT_Conversations_API {
         return $phone;
     }
 
+    public static function send_message( $recipientid, $platform, $message ) {
+        // send a POST request to the API
+        $social_mediator_url = get_option( 'disciple_tools_conversations_social_mediator_url' );
+
+        $send_message_url = $social_mediator_url . 'api/response';
+        $response = wp_remote_post($send_message_url, array(
+            'body' => json_encode(array(
+                'recipientid' => $recipientid,
+                'platform' => $platform,
+                'message' => $message
+            )),
+            'headers' => array( 'Content-Type' => 'application/json' ),
+        ));
+
+        // if the request was successful, return the response
+        if ( !is_wp_error( $response ) ) {
+            return $response;
+        } else {
+            return json_decode( wp_remote_retrieve_body( $response ) );
+        }
+
+    }
 }
