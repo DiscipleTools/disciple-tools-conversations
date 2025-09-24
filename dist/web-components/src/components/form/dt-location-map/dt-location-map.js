@@ -1,0 +1,212 @@
+import { css, html } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
+import DtFormBase from '../dt-form-base.js';
+import './dt-location-map-item.js';
+
+export class DtLocationMap extends DtFormBase {
+  static get properties() {
+    return {
+      ...super.properties,
+      placeholder: { type: String },
+      value: {
+        type: Array,
+        reflect: true,
+      },
+      locations: {
+        type: Array,
+        state: true,
+      },
+      open: {
+        type: Boolean,
+        state: true,
+      },
+      onchange: { type: String },
+      mapboxToken: {
+        type: String,
+        attribute: 'mapbox-token',
+      },
+      googleToken: {
+        type: String,
+        attribute: 'google-token',
+      },
+    };
+  }
+
+  static get styles() {
+    return [
+      ...super.styles,
+      css`
+        :host {
+          font-family: Helvetica, Arial, sans-serif;
+        }
+        .input-group {
+          display: flex;
+        }
+
+        .field-container {
+          position: relative;
+        }
+      `,
+    ];
+  }
+
+  constructor() {
+    super();
+    this.value = [];
+    this.locations = [{
+      id: Date.now(),
+    }];
+  }
+
+  _setFormValue(value) {
+    super._setFormValue(value);
+    this.internals.setFormValue(JSON.stringify(value));
+  }
+
+  willUpdate(...args) {
+    super.willUpdate(...args);
+
+    if (this.value) {
+      if (this.value.filter((opt) => !opt.id)) {
+        this.value = [
+          ...this.value.map((opt) => ({
+            ...opt,
+            id: opt.grid_meta_id,
+          }))
+        ];
+      }
+    }
+    this.updateLocationList();
+  }
+
+  firstUpdated(...args) {
+    super.firstUpdated(...args);
+    this.internals.setFormValue(JSON.stringify(this.value));
+  }
+
+  updated(changedProperties) {
+    // if length of value was changed, focus the last element
+    if (changedProperties.has('value')) {
+      const old = changedProperties.get('value');
+      if (old && old?.length !== this.value?.length) {
+        this.focusNewLocation();
+      }
+    }
+    // if length of locations was changed, focus the last element
+    if (changedProperties.has('locations')) {
+      const old = changedProperties.get('locations');
+      if (old && old?.length !== this.locations?.length) {
+        this.focusNewLocation();
+      }
+    }
+  }
+
+  focusNewLocation() {
+    const items = this.shadowRoot.querySelectorAll('dt-location-map-item');
+    if (items && items.length) {
+      // console.log('trigger focus');
+      items[items.length - 1].dispatchEvent(new Event('autofocus'));
+    }
+  }
+
+  updateLocationList() {
+    if (!this.disabled && (this.open || !this.value || !this.value.length)) {
+      this.open = true;
+      this.locations = [
+        ...(this.value || []).filter(i => i.label),
+        {
+          id: Date.now(),
+        }
+      ];
+    } else {
+      this.locations = [
+        ...(this.value || []).filter(i => i.label),
+      ];
+    }
+  }
+
+  selectLocation(evt) {
+    const event = new CustomEvent('change', {
+      detail: {
+        field: this.name,
+        oldValue: this.value,
+      },
+    });
+    const newLocation = {
+      ...evt.detail.metadata,
+      id: Date.now(),
+    }
+    this.value = [
+      ...(this.value || []).filter(i => i.label),
+      newLocation,
+    ];
+    this.updateLocationList();
+    event.detail.newValue = this.value;
+
+    // dispatch event for use with addEventListener from javascript
+    this.dispatchEvent(event);
+    this._setFormValue(this.value);
+  }
+
+  deleteItem(evt) {
+    const event = new CustomEvent('change', {
+      detail: {
+        field: this.name,
+        oldValue: this.value,
+      },
+    });
+
+    const item = evt.detail?.metadata;
+    const gridMetaId = item?.grid_meta_id;
+    if (gridMetaId) {
+      // remove this item from the value
+      this.value = (this.value || []).filter(m => m.grid_meta_id !== gridMetaId);
+    } else {
+      // remove by lat/lng
+      this.value = (this.value || []).filter(m => m.lat !== item.lat && m.lng !== item.lng);
+    }
+
+    this.updateLocationList();
+    event.detail.newValue = this.value;
+
+    // dispatch event for use with addEventListener from javascript
+    this.dispatchEvent(event);
+    this._setFormValue(this.value);
+  }
+
+  addNew() {
+    this.open = true;
+    this.updateLocationList();
+  }
+
+  renderItem(opt) {
+    return html`
+      <dt-location-map-item
+        placeholder="${this.placeholder}"
+        .metadata=${opt}
+        mapbox-token="${this.mapboxToken}"
+        google-token="${this.googleToken}"
+        @delete=${this.deleteItem}
+        @select=${this.selectLocation}
+        ?disabled=${this.disabled}
+      ></dt-location-map-item>
+    `;
+  }
+
+  render() {
+    const values = [...(this.value || [])];
+    values.push({
+      id: Date.now(),
+    });
+    return html`
+      ${this.labelTemplate()}
+
+      ${repeat(this.locations || [], (opt) => opt.id, (opt, idx) => this.renderItem(opt, idx))}
+      ${!this.open
+        ? html`<button @click="${this.addNew}">Add New</button>`
+        : null}
+    `;
+  }
+}
+
+window.customElements.define('dt-location-map', DtLocationMap);
