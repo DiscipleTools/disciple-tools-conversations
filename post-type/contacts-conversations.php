@@ -419,7 +419,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                             break;
                                         }
                                     }
-                                    
+
                                     if ( '' === $ai_summary ) {
                                         $first_key = array_key_first( $summaries );
                                         $ai_summary = (string) $summaries[ $first_key ];
