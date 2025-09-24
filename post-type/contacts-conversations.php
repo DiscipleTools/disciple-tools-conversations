@@ -407,8 +407,25 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                 $conversation_type = $conversation['type']['key'] ?? 'chatwoot';
                                 $type_label = $field_settings['type']['default'][$conversation_type]['label'] ?? ucfirst( $conversation_type );
                                 $ai_summary = '';
-                                if ( isset( $conversation['ai_summary'] ) ) {
-                                    $ai_summary = trim( wp_strip_all_tags( (string) $conversation['ai_summary'] ) );
+                                if ( !empty( $conversation['ai_summary_array'] ) ) {
+                                    $summaries = $conversation['ai_summary_array'];
+                                    $user_locale = get_user_locale() ?? 'en_US';
+                                    $user_locale_normalized = explode( '_', $user_locale )[0] ?? 'en';
+
+                                    foreach ( $summaries as $locale_key => $summary_text ) {
+                                        $normalized_key = explode( '_', $locale_key )[0] ?? 'en';
+                                        if ( $user_locale_normalized === $normalized_key ) {
+                                            $ai_summary = $summary_text;
+                                            break;
+                                        }
+                                    }
+
+                                    if ( '' === $ai_summary ) {
+                                        $first_key = array_key_first( $summaries );
+                                        $ai_summary = (string) $summaries[ $first_key ];
+                                    }
+
+                                    $ai_summary = trim( wp_strip_all_tags( $ai_summary ) );
                                 }
 
                                 // Get comments for this conversation
