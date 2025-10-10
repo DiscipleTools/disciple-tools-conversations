@@ -302,6 +302,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                     padding: 12px;
                     border-bottom: 1px solid #e6e6e6;
                     transition: background-color 0.2s;
+                    cursor: pointer;
                 }
                 .conversation-row:hover {
                     background-color: #f8f9fa;
@@ -583,11 +584,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
 
             <script>
                 jQuery(document).ready(function($) {
-                    $('.view-conversation-btn').on('click', function() {
-                        const conversationId = $(this).data('conversation-id');
-                        const conversationName = $(this).data('conversation-name');
-                        const conversationSummary = $(this).data('conversation-summary');
-
+                    function openConversationModal(conversationId, conversationName, conversationSummary) {
                         $('#conversation-modal-title').text('Conversation History: ' + conversationName);
 
                         // Set the URL for the "Open Record" button
@@ -669,6 +666,24 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                 '<div class="no-comments">Failed to load conversation history. Please try again.</div>'
                             );
                         });
+                    }
+
+                    // Handle button click
+                    $('.view-conversation-btn').on('click', function(e) {
+                        e.stopPropagation(); // Prevent row click from firing
+                        const conversationId = $(this).data('conversation-id');
+                        const conversationName = $(this).data('conversation-name');
+                        const conversationSummary = $(this).data('conversation-summary');
+                        openConversationModal(conversationId, conversationName, conversationSummary);
+                    });
+
+                    // Handle row click
+                    $('.conversation-row').on('click', function() {
+                        const $button = $(this).find('.view-conversation-btn');
+                        const conversationId = $button.data('conversation-id');
+                        const conversationName = $button.data('conversation-name');
+                        const conversationSummary = $button.data('conversation-summary');
+                        openConversationModal(conversationId, conversationName, conversationSummary);
                     });
                 });
             </script>
