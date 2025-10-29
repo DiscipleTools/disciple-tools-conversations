@@ -1,0 +1,38 @@
+{
+    "name": "disciple-tools-conversations",
+    "version": "0.0.1",
+    "description": "[![Build Status](https://travis-ci.com/DiscipleTools/disciple-tools-autolink.svg?branch=master)](https://travis-ci.com/DiscipleTools/disciple-tools-autolink)",
+    "main": "magic-link/src/index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "npx mix",
+        "prod": "npx mix --production",
+        "watch": "npx mix watch",
+        "lint": "./vendor/bin/phpcs"
+    },
+    "author": "codezone",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/thecodezone/disciple-tools-autolink/issues"
+    },
+    "homepage": "https://github.com/thecodezone/disciple-tools-autolink#readme",
+    "dependencies": {
+        "-": "^0.0.1",
+        "@disciple.tools/web-components": "0.6.8",
+        "@lit/localize": "^0.11.4",
+        "element-internals-polyfill": "^1.1.15",
+        "g": "^2.0.1",
+        "iconify-icon": "^1.0.1",
+        "lit": "^2.3.0",
+        "npm": "^9.3.1",
+        "socket.io-client": "^4.8.0"
+    },
+    "devDependencies": {
+        "browser-sync": "^2.27.10",
+        "browser-sync-webpack-plugin": "^2.3.0",
+        "laravel-mix": "^6.0.49"
+    }
+}

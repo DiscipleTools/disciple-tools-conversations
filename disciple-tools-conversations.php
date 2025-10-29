@@ -86,6 +86,14 @@ class Disciple_Tools_Conversations {
     }
 
     private function __construct() {
+        $is_rest = dt_is_rest();
+        /**
+         * @todo Decide if you want to use the REST API example
+         * To remove: delete this following line and remove the folder named /rest-api
+         */
+        if ( $is_rest && strpos( dt_get_url_path(), 'disciple_tools_conversations' ) !== false ) {
+            require_once( 'rest-api/rest-api.php' ); // adds starter rest api class
+        }
 
         require_once( 'post-type/loader.php' ); // add starter post type extension to Disciple.Tools system
 
@@ -95,11 +103,21 @@ class Disciple_Tools_Conversations {
 
         $this->i18n();
 
-//        if ( is_admin() ) {
-//            require_once( 'admin/admin-menu-and-tabs.php' ); // adds starter admin page and section for plugin
-// adds links to the plugin description area in the plugin admin list.
-//            add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
-//        }
+        if ( is_admin() ) {
+            require_once( 'admin/admin-menu-and-tabs.php' ); // adds starter admin page and section for plugin adds links to the plugin description area in the plugin admin list.
+            add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
+        }
+
+/**
+         * @todo Decide if you want to create a magic link
+         * To remove: delete the line below and remove the folder named /magic-link
+         */
+        // require_once( 'magic-link/post-type-magic-link/magic-link-post-type.php' );
+        // require_once( 'magic-link/magic-link-user-app.php' );
+        require_once( 'magic-link/conversation-app.php' );
+        // require_once( 'magic-link/magic-link-non-object.php' );
+        // require_once( 'magic-link/magic-link-map.php' );
+//        require_once( 'magic-link/magic-link-home.php' );
     }
 
     /**

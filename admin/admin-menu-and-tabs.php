@@ -79,18 +79,13 @@ class Disciple_Tools_Conversations_Menu {
             <h2><?php echo esc_html( $this->page_title ) ?></h2>
             <h2 class="nav-tab-wrapper">
                 <a href="<?php echo esc_attr( $link ) . 'general' ?>"
-                   class="nav-tab <?php echo esc_html( ( $tab == 'general' || !isset( $tab ) ) ? 'nav-tab-active' : '' ); ?>">General</a>
-                <a href="<?php echo esc_attr( $link ) . 'second' ?>" class="nav-tab <?php echo esc_html( ( $tab == 'second' ) ? 'nav-tab-active' : '' ); ?>">Second</a>
+                   class="nav-tab <?php echo esc_html( ( $tab == 'general' || !isset( $tab ) ) ? 'nav-tab-active' : '' ); ?>">Social Mediator Server</a>
             </h2>
 
             <?php
             switch ( $tab ) {
                 case 'general':
                     $object = new Disciple_Tools_Conversations_Tab_General();
-                    $object->content();
-                    break;
-                case 'second':
-                    $object = new Disciple_Tools_Conversations_Tab_Second();
                     $object->content();
                     break;
                 default:
@@ -139,8 +134,8 @@ class Disciple_Tools_Conversations_Tab_General {
     public function main_column() {
         $token = Disciple_Tools_Conversations_Menu::instance()->token;
         $this->process_form_fields( $token );
-
-        $my_plugin_option = get_option( $token . '_my_plugin_option' );
+        dt_write_log( $token . '_social_mediator_url');
+        $social_mediator_url = get_option( $token . '_social_mediator_url' );
         ?>
         <form method="post">
             <?php wp_nonce_field( 'dt_admin_form', 'dt_admin_form_nonce' ) ?>
@@ -154,10 +149,10 @@ class Disciple_Tools_Conversations_Tab_General {
                 <tbody>
                 <tr>
                     <td>
-                        My Plugin Option
+                        Social Mediator Server URL
                     </td>
                     <td>
-                        <input type="text" name="my-plugin-option" placeholder="" value="<?php echo esc_attr( $my_plugin_option ) ?>">
+                        <input type="text" name="social_mediator_url" placeholder="" value="<?php echo esc_attr( $social_mediator_url ) ?>">
                     </td>
                 </tr>
                 <tr>
@@ -179,8 +174,12 @@ class Disciple_Tools_Conversations_Tab_General {
 
             $post_vars = dt_recursive_sanitize_array( $_POST );
 
-            if ( isset( $post_vars['my-plugin-option'] ) ) {
-                update_option( $token . '_my_plugin_option', $post_vars['my-plugin-option'] );
+            if ( isset( $post_vars['social_mediator_url'] ) ) {
+                //check is the url ends with a slash
+                if ( substr( $post_vars['social_mediator_url'], -1 ) !== '/' ){
+                    $post_vars['social_mediator_url'] .= '/';
+                }
+                update_option( $token . '_social_mediator_url', $post_vars['social_mediator_url'] );
             }
         }
     }

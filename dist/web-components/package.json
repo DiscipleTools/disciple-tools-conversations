@@ -1,0 +1,108 @@
+{
+  "name": "@disciple.tools/web-components",
+  "description": "Disciple.Tools Web components following open-wc recommendations",
+  "author": "disciple.tools",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://github.com/DiscipleTools/disciple-tools-web-components",
+  "version": "0.6.8",
+  "main": "index.js",
+  "module": "index.js",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "scripts": {
+    "analyze": "cem analyze --litelement",
+    "start": "web-dev-server",
+    "lint": "eslint --ext .js,.html . --ignore-path .gitignore && prettier \"**/*.js\" --check",
+    "format": "eslint --ext .js,.html . --fix --ignore-path .gitignore && prettier \"**/*.js\" --write",
+    "test": "web-test-runner --coverage",
+    "test:watch": "web-test-runner --watch",
+    "storybook": "npm run analyze -- --exclude dist --exclude samples --exclude documentation && web-dev-server -c .storybook/server.mjs",
+    "storybook:build": "npm run analyze -- --exclude dist --exclude samples --exclude documentation && build-storybook && cp -r assets/ storybook-static/assets && cp netlify.toml storybook-static",
+    "build": "rollup -c && rollup -c rollup.services.config.js && rm -rf ./samples/html/js && cp -R ./dist ./samples/html/js",
+    "localize:extract": "lit-localize extract",
+    "localize:build": "lit-localize build",
+    "publish": "npm run build && npm publish"
+  },
+  "dependencies": {
+    "@lit/localize": "^0.11.4",
+    "iconify-icon": "^1.0.2",
+    "lit": "^2.3.2"
+  },
+  "devDependencies": {
+    "@babel/eslint-plugin": "^7.6.0",
+    "@custom-elements-manifest/analyzer": "^0.6.4",
+    "@lit/localize-tools": "^0.6.5",
+    "@open-wc/eslint-config": "^8.0.2",
+    "@open-wc/testing": "^3.1.6",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-replace": "^5.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@web/dev-server": "^0.1.34",
+    "@web/dev-server-rollup": "^0.3.19",
+    "@web/dev-server-storybook": "^0.5.4",
+    "@web/rollup-plugin-copy": "^0.3.0",
+    "@web/test-runner": "^0.14.0",
+    "@web/test-runner-commands": "^0.6.3",
+    "dotenv": "^16.0.3",
+    "element-internals-polyfill": "^1.1.9",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "lit-html": "^2.4.0",
+    "prettier": "^2.4.1",
+    "rollup": "^2.78.1",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-minify-html-literals": "^1.2.6",
+    "rollup-plugin-multi-input": "^1.3.1",
+    "rollup-plugin-summary": "^1.4.3",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "customElements": "custom-elements.json",
+  "eslintConfig": {
+    "extends": [
+      "@open-wc",
+      "prettier"
+    ],
+    "ignorePatterns": [
+      "src/i18n/**",
+      "samples",
+      "checkNodeVersion.js",
+      "*.config.js"
+    ],
+    "rules": {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/*.test.js",
+            "**/*.stories.js"
+          ]
+        }
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.test.js",
+          "*.spec.js"
+        ],
+        "rules": {
+          "no-unused-expressions": "off"
+        }
+      }
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "avoid"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
