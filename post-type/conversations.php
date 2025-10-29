@@ -33,6 +33,10 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         add_action( 'after_setup_theme', [ $this, 'after_setup_theme' ], 100 );
         add_filter( 'dt_set_roles_and_permissions', [ $this, 'dt_set_roles_and_permissions' ], 20, 1 ); //after contacts
 
+        //permissions
+        add_filter( 'dt_can_view_permission', [ $this, 'can_view_permission_filter' ], 10, 3 );
+        add_filter( 'dt_can_update_permission', [ $this, 'can_update_permission_filter' ], 10, 3 );
+
         //setup tiles and fields
         add_filter( 'dt_custom_fields_settings', [ $this, 'dt_custom_fields_settings' ], 200, 2 );
         add_filter( 'dt_details_additional_tiles', [ $this, 'dt_details_additional_tiles' ], 10, 2 );
@@ -420,6 +424,82 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             </div>
 
         <?php }
+    }
+
+    /**
+     * Filter to check if user can view a conversation based on their access to linked contacts
+     *
+     * @param bool $has_permission
+     * @param int $post_id
+     * @param string $post_type
+     * @return bool
+     */
+    public function can_view_permission_filter( $has_permission, $post_id, $post_type ){
+        if ( $post_type === $this->post_type ){
+            // If user already has permission, return it
+            if ( $has_permission ){
+                return $has_permission;
+            }
+
+            // Get linked contacts for this conversation
+            $linked_contacts = $this->get_linked_contacts( $post_id );
+
+            // Check if user has access to any of the linked contacts
+            foreach ( $linked_contacts as $contact_id ){
+                if ( DT_Posts::can_view( 'contacts', $contact_id ) ){
+                    return true;
+                }
+            }
+        }
+        return $has_permission;
+    }
+
+    /**
+     * Filter to check if user can update a conversation based on their access to linked contacts
+     *
+     * @param bool $has_permission
+     * @param int $post_id
+     * @param string $post_type
+     * @return bool
+     */
+    public function can_update_permission_filter( $has_permission, $post_id, $post_type ){
+        if ( $post_type === $this->post_type ){
+            // If user already has permission, return it
+            if ( $has_permission ){
+                return $has_permission;
+            }
+
+            // Get linked contacts for this conversation
+            $linked_contacts = $this->get_linked_contacts( $post_id );
+
+            // Check if user has update access to any of the linked contacts
+            foreach ( $linked_contacts as $contact_id ){
+                if ( DT_Posts::can_update( 'contacts', $contact_id ) ){
+                    return true;
+                }
+            }
+        }
+        return $has_permission;
+    }
+
+    /**
+     * Get all contacts linked to this conversation
+     *
+     * @param int $conversation_id
+     * @return array Array of contact post IDs
+     */
+    private function get_linked_contacts( $conversation_id ){
+        global $wpdb;
+        $p2p_key = $this->post_type . '_to_contacts';
+
+        $linked_contacts = $wpdb->get_col( $wpdb->prepare( "
+            SELECT p2p_to as contact_id
+            FROM $wpdb->p2p
+            WHERE p2p_type = %s
+            AND p2p_from = %s
+        ", $p2p_key, $conversation_id ) );
+
+        return $linked_contacts ?: [];
     }
 }
 
