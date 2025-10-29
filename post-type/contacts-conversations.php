@@ -292,7 +292,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
 
     public function dt_record_after_details_section_conversations( $post_type, $post ) {
         if ( $post_type === 'contacts' ){
-            $conversations = DT_Posts::list_posts( 'conversations', [ 'contacts' => [ $post['ID'] ] ] );
+            $conversations = $post['conversations'];
             $field_settings = DT_Posts::get_post_field_settings( 'conversations' );
             ?>
             <style>
@@ -399,12 +399,13 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                         Conversations
                     </h3>
                     <div class="section-body">
-                        <?php if ( empty( $conversations['posts'] ) ): ?>
+                        <?php if ( empty( $conversations ) ): ?>
                             <div class="no-conversations">
                                 No conversations found for this contact.
                             </div>
                         <?php else : ?>
-                            <?php foreach ( $conversations['posts'] as $conversation ):
+                            <?php foreach ( $conversations as $conversation ):
+                                $conversation = DT_Posts::get_post( 'conversations', $conversation['ID'] );
                                 $conversation_type = $conversation['type']['key'] ?? 'chatwoot';
                                 $type_label = $field_settings['type']['default'][$conversation_type]['label'] ?? ucfirst( $conversation_type );
                                 $ai_summary = '';

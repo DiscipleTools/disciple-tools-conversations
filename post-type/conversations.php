@@ -493,10 +493,10 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
         $p2p_key = $this->post_type . '_to_contacts';
 
         $linked_contacts = $wpdb->get_col( $wpdb->prepare( "
-            SELECT p2p_to as contact_id
+            SELECT p2p_from as contact_id
             FROM $wpdb->p2p
             WHERE p2p_type = %s
-            AND p2p_from = %s
+            AND p2p_to = %s
         ", $p2p_key, $conversation_id ) );
 
         return $linked_contacts ?: [];
