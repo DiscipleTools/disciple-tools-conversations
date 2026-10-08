@@ -173,8 +173,4 @@ class Disciple_Tools_Conversations_List extends DT_Module_Base {
         }
         return $permissions;
     }
-
-
 }
-
-

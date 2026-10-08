@@ -690,5 +690,4 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
             </script>
         <?php }
     }
-
 }

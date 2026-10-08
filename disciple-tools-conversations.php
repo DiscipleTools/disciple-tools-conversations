@@ -54,7 +54,6 @@ function disciple_tools_conversations() {
     }
 
     return Disciple_Tools_Conversations::instance();
-
 }
 add_action( 'after_setup_theme', 'disciple_tools_conversations', 20 );
 

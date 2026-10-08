@@ -130,5 +130,4 @@ class DT_Conversations_API {
 
         return $phone;
     }
-
 }
