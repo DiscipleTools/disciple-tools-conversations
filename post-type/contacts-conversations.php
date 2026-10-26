@@ -646,7 +646,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                     commentsHtml += `
                                         <div class="conversation-comment ${messageClass}">
                                             <div class="conversation-comment-meta">
-                                                <strong>${author}</strong> - ${date}
+                                                <strong>${window.SHAREDFUNCTIONS.escapeHTML(author)}</strong> - ${window.SHAREDFUNCTIONS.escapeHTML(date)}
                                             </div>
                                             <div class="conversation-comment-content" dir="auto">
                                                 ${commentContent}
