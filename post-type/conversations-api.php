@@ -66,9 +66,9 @@ class DT_Conversations_API {
     public static function create_or_update_conversation_record( string $handle, array $fields, ?int $contact_id = null ){
         $conversation_record = self::find_record_by_handle( $handle, true );
         if ( !empty( $conversation_record ) ){
-            //if ( is_user_logged_in() && !DT_Posts::can_view( 'conversation', $conversation_record['ID'] ) ){
-            //    return new WP_Error( 'no_access', 'No access to conversation' );
-            //}
+            if ( is_user_logged_in() && !DT_Posts::can_view( 'conversations', $conversation_record['ID'] ) ){
+                return new WP_Error( 'no_access', 'No access to conversation' );
+            }
             if ( isset( $fields['name'] ) ){
                 unset( $fields['name'] );
             }
