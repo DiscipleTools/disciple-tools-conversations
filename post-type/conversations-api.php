@@ -44,6 +44,8 @@ class DT_Conversations_API {
 
     public static function find_record_by_handle( string $handle, $return_record = false ){
         global $wpdb;
+        // The theme's duplicate search strips leading carets before matching titles, so look up the same title.
+        $handle = ltrim( $handle, '^' );
         $id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'conversations'", $handle ) );
         if ( $return_record && !empty( $id ) ){
             return DT_Posts::get_post( 'conversations', $id, true, false );
@@ -64,11 +66,11 @@ class DT_Conversations_API {
     }
 
     public static function create_or_update_conversation_record( string $handle, array $fields, ?int $contact_id = null ){
-        $conversation_record = self::find_record_by_handle( $handle, true );
-        if ( !empty( $conversation_record ) ){
-            //if ( is_user_logged_in() && !DT_Posts::can_view( 'conversation', $conversation_record['ID'] ) ){
-            //    return new WP_Error( 'no_access', 'No access to conversation' );
-            //}
+        $conversation_id = self::find_record_by_handle( $handle );
+        if ( !empty( $conversation_id ) ){
+            if ( is_user_logged_in() && !DT_Posts::can_update( 'conversations', (int) $conversation_id ) ){
+                return new WP_Error( 'no_access', 'No access to conversation' );
+            }
             if ( isset( $fields['name'] ) ){
                 unset( $fields['name'] );
             }
@@ -81,7 +83,7 @@ class DT_Conversations_API {
             if ( $contact_id ){
                 $fields['contacts'] = self::dt_array_to_dt_field_update_format( [ $contact_id ] );
             }
-            $conversation_record = DT_Posts::update_post( 'conversations', $conversation_record['ID'], $fields, true, false );
+            $conversation_record = DT_Posts::update_post( 'conversations', (int) $conversation_id, $fields, true, false );
         } else {
             if ( !isset( $fields['type'] ) ){
                 return new WP_Error( 'missing_type', 'Missing type field' );

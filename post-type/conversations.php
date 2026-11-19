@@ -331,8 +331,58 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
             if ( !isset( $fields['type'] ) ){
                 return new WP_Error( 400, 'Handle Type is required', [ 'function' => __METHOD__ ] );
             }
+            if ( is_user_logged_in() ){
+                foreach ( [ $fields['title'] ?? '', $fields['name'] ?? '' ] as $requested_name ){
+                    if ( is_string( $requested_name ) && $this->is_chatwoot_handle( $requested_name ) ){
+                        return new WP_Error( __METHOD__, 'Conversation names starting with "chatwoot" are reserved for the Chatwoot integration', [ 'status' => 403 ] );
+                    }
+                }
+            }
+            // Creating over an existing handle merges into that conversation, so the user must be able to update it.
+            if ( is_user_logged_in() ){
+                $handle_types = DT_Conversations_API::get_handles();
+                $handle_type = $handle_types[$fields['type']] ?? null;
+                foreach ( [ $fields['title'] ?? '', $fields['name'] ?? '' ] as $name ){
+                    if ( !is_string( $name ) || $name === '' ){
+                        continue;
+                    }
+                    $normalized = $name;
+                    if ( $handle_type && isset( $handle_type['convert_to_lowercase'] ) && $handle_type['convert_to_lowercase'] ){
+                        $normalized = strtolower( $normalized );
+                    }
+                    $normalized = preg_replace( '/\s+/', '', $normalized );
+                    foreach ( array_unique( [ $name, $normalized ] ) as $handle ){
+                        $existing_id = DT_Conversations_API::find_record_by_handle( $handle );
+                        if ( !empty( $existing_id ) && !DT_Posts::can_update( $this->post_type, (int) $existing_id ) ){
+                            return new WP_Error( __METHOD__, 'A conversation with this handle already exists', [ 'status' => 409 ] );
+                        }
+                    }
+                }
+            }
         }
         return $proceed;
+    }
+
+    /**
+     * The Chatwoot integration finds its conversations by exact title, and MySQL compares titles ignoring case, accents,
+     * character width and zero-width characters. A name is reserved when, as WordPress will store it, it collates as
+     * starting with "chatwoot".
+     */
+    private function is_chatwoot_handle( string $name ): bool {
+        global $wpdb;
+        foreach ( array_unique( [ $name, preg_replace( '/\s+/', '', $name ) ] ) as $candidate ){
+            $stored_title = sanitize_post_field( 'post_title', $candidate, 0, 'db' );
+            $reserved = $wpdb->get_var( $wpdb->prepare(
+                'SELECT LEFT( WEIGHT_STRING( %s ), LENGTH( WEIGHT_STRING( %s ) ) ) = WEIGHT_STRING( %s )',
+                $stored_title,
+                'chatwoot',
+                'chatwoot'
+            ) );
+            if ( !empty( $reserved ) ){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -488,7 +538,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
      * @param int $conversation_id
      * @return array Array of contact post IDs
      */
-    private function get_linked_contacts( $conversation_id ){
+    public function get_linked_contacts( $conversation_id ){
         global $wpdb;
         $p2p_key = $this->post_type . '_to_contacts';
 

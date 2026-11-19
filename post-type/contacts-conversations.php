@@ -93,6 +93,13 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                 if ( empty( $conv_title ) || empty( $conv_type ) ){
                     continue;
                 }
+                // With no logged-in user, only adopt an existing conversation that no contact holds yet.
+                if ( !is_user_logged_in() ){
+                    $existing_id = DT_Conversations_API::find_record_by_handle( $conv_title );
+                    if ( !empty( $existing_id ) && !empty( Disciple_Tools_Conversations_Base::instance()->get_linked_contacts( $existing_id ) ) ){
+                        continue;
+                    }
+                }
                 $conversation_fields = [
                     'first_name' => $names['first_name'],
                     'last_name' => $names['last_name'],
@@ -646,7 +653,7 @@ class Disciple_Tools_Contacts_Conversations extends DT_Module_Base {
                                     commentsHtml += `
                                         <div class="conversation-comment ${messageClass}">
                                             <div class="conversation-comment-meta">
-                                                <strong>${author}</strong> - ${date}
+                                                <strong>${window.SHAREDFUNCTIONS.escapeHTML(author)}</strong> - ${window.SHAREDFUNCTIONS.escapeHTML(date)}
                                             </div>
                                             <div class="conversation-comment-content" dir="auto">
                                                 ${commentContent}
