@@ -534,7 +534,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
      * @param int $conversation_id
      * @return array Array of contact post IDs
      */
-    private function get_linked_contacts( $conversation_id ){
+    public function get_linked_contacts( $conversation_id ){
         global $wpdb;
         $p2p_key = $this->post_type . '_to_contacts';
 
