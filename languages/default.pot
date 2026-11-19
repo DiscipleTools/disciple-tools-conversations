@@ -1,15 +1,15 @@
-# Copyright (C) 2025 
+# Copyright (C) 2026 
 # This file is distributed under the same license as the Disciple.Tools - Conversations plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Disciple.Tools - Conversations 0.1.3\n"
+"Project-Id-Version: Disciple.Tools - Conversations 0.1.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/disciple-tools-conversations\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-24T13:18:31+00:00\n"
+"POT-Creation-Date: 2026-11-19T15:40:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: disciple-tools-conversations\n"
@@ -37,72 +37,72 @@ msgstr ""
 msgid "All By Status"
 msgstr ""
 
-#: post-type/conversations.php:66
-#: post-type/conversations.php:82
+#: post-type/conversations.php:70
+#: post-type/conversations.php:86
 msgid "Conversation"
 msgstr ""
 
-#: post-type/conversations.php:67
-#: post-type/conversations.php:83
+#: post-type/conversations.php:71
+#: post-type/conversations.php:87
 #: post-type/loader.php:19
 msgid "Conversations"
 msgstr ""
 
-#: post-type/conversations.php:127
+#: post-type/conversations.php:131
 msgid "Type"
 msgstr ""
 
-#: post-type/conversations.php:128
+#: post-type/conversations.php:132
 msgid "Select the type of conversation."
 msgstr ""
 
-#: post-type/conversations.php:132
+#: post-type/conversations.php:136
 msgid "Email"
 msgstr ""
 
-#: post-type/conversations.php:133
+#: post-type/conversations.php:137
 msgid "Email conversation"
 msgstr ""
 
-#: post-type/conversations.php:136
+#: post-type/conversations.php:140
 msgid "Phone"
 msgstr ""
 
-#: post-type/conversations.php:137
+#: post-type/conversations.php:141
 msgid "SMS, Whatsapp, etc"
 msgstr ""
 
-#: post-type/conversations.php:140
+#: post-type/conversations.php:144
 msgid "Facebook"
 msgstr ""
 
-#: post-type/conversations.php:141
+#: post-type/conversations.php:145
 msgid "Facebook conversation"
 msgstr ""
 
-#: post-type/conversations.php:190
+#: post-type/conversations.php:194
 msgid "Contacts"
 msgstr ""
 
-#: post-type/conversations.php:204
-#: post-type/conversations.php:205
+#: post-type/conversations.php:208
+#: post-type/conversations.php:209
 msgid "First Name"
 msgstr ""
 
-#: post-type/conversations.php:212
-#: post-type/conversations.php:213
+#: post-type/conversations.php:216
+#: post-type/conversations.php:217
 msgid "Last Name"
 msgstr ""
 
-#: post-type/conversations.php:220
+#: post-type/conversations.php:224
 msgid "Source"
 msgstr ""
 
-#: post-type/conversations.php:221
+#: post-type/conversations.php:225
 msgid "Source of the conversation"
 msgstr ""
 
-#: post-type/conversations.php:291
+#: post-type/conversations.php:295
 msgid "Custom Section Contact"
 msgstr ""
 
