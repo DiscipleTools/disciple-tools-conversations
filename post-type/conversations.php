@@ -339,19 +339,23 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                 }
             }
             // Creating over an existing handle merges into that conversation, so the user must be able to view it.
-            $name = $fields['title'] ?? $fields['name'] ?? '';
-            if ( is_user_logged_in() && is_string( $name ) && $name !== '' ){
+            if ( is_user_logged_in() ){
                 $handle_types = DT_Conversations_API::get_handles();
                 $handle_type = $handle_types[$fields['type']] ?? null;
-                $normalized = $name;
-                if ( $handle_type && isset( $handle_type['convert_to_lowercase'] ) && $handle_type['convert_to_lowercase'] ){
-                    $normalized = strtolower( $normalized );
-                }
-                $normalized = preg_replace( '/\s+/', '', $normalized );
-                foreach ( array_unique( [ $name, $normalized ] ) as $handle ){
-                    $existing_id = DT_Conversations_API::find_record_by_handle( $handle );
-                    if ( !empty( $existing_id ) && !DT_Posts::can_view( $this->post_type, (int) $existing_id ) ){
-                        return new WP_Error( __METHOD__, 'A conversation with this handle already exists', [ 'status' => 409 ] );
+                foreach ( [ $fields['title'] ?? '', $fields['name'] ?? '' ] as $name ){
+                    if ( !is_string( $name ) || $name === '' ){
+                        continue;
+                    }
+                    $normalized = $name;
+                    if ( $handle_type && isset( $handle_type['convert_to_lowercase'] ) && $handle_type['convert_to_lowercase'] ){
+                        $normalized = strtolower( $normalized );
+                    }
+                    $normalized = preg_replace( '/\s+/', '', $normalized );
+                    foreach ( array_unique( [ $name, $normalized ] ) as $handle ){
+                        $existing_id = DT_Conversations_API::find_record_by_handle( $handle );
+                        if ( !empty( $existing_id ) && !DT_Posts::can_view( $this->post_type, (int) $existing_id ) ){
+                            return new WP_Error( __METHOD__, 'A conversation with this handle already exists', [ 'status' => 409 ] );
+                        }
                     }
                 }
             }

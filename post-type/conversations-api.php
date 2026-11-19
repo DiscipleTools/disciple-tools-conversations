@@ -44,6 +44,8 @@ class DT_Conversations_API {
 
     public static function find_record_by_handle( string $handle, $return_record = false ){
         global $wpdb;
+        // The theme's duplicate search strips leading carets before matching titles, so look up the same title.
+        $handle = ltrim( $handle, '^' );
         $id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'conversations'", $handle ) );
         if ( $return_record && !empty( $id ) ){
             return DT_Posts::get_post( 'conversations', $id, true, false );
