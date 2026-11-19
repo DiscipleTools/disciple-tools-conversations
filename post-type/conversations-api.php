@@ -68,7 +68,7 @@ class DT_Conversations_API {
     public static function create_or_update_conversation_record( string $handle, array $fields, ?int $contact_id = null ){
         $conversation_id = self::find_record_by_handle( $handle );
         if ( !empty( $conversation_id ) ){
-            if ( is_user_logged_in() && !DT_Posts::can_view( 'conversations', (int) $conversation_id ) ){
+            if ( is_user_logged_in() && !DT_Posts::can_update( 'conversations', (int) $conversation_id ) ){
                 return new WP_Error( 'no_access', 'No access to conversation' );
             }
             if ( isset( $fields['name'] ) ){
