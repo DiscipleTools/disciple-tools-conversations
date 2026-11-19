@@ -338,7 +338,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                     }
                 }
             }
-            // Creating over an existing handle merges into that conversation, so the user must be able to view it.
+            // Creating over an existing handle merges into that conversation, so the user must be able to update it.
             if ( is_user_logged_in() ){
                 $handle_types = DT_Conversations_API::get_handles();
                 $handle_type = $handle_types[$fields['type']] ?? null;
@@ -353,7 +353,7 @@ class Disciple_Tools_Conversations_Base extends DT_Module_Base {
                     $normalized = preg_replace( '/\s+/', '', $normalized );
                     foreach ( array_unique( [ $name, $normalized ] ) as $handle ){
                         $existing_id = DT_Conversations_API::find_record_by_handle( $handle );
-                        if ( !empty( $existing_id ) && !DT_Posts::can_view( $this->post_type, (int) $existing_id ) ){
+                        if ( !empty( $existing_id ) && !DT_Posts::can_update( $this->post_type, (int) $existing_id ) ){
                             return new WP_Error( __METHOD__, 'A conversation with this handle already exists', [ 'status' => 409 ] );
                         }
                     }
